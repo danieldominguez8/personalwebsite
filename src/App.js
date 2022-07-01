@@ -9,7 +9,7 @@ function App() {
     <div className="body-container">
       <div className="split-section">
         <div className="picture-container">
-          <img className="biography-picture" src={danny} />
+          <img className="biography-picture" alt="danny" src={danny} />
         </div>
         <div className="about-me-container">
           <h1 className="biography-header">Hello, my name is Danny Dominguez and I'm a Software Engineer</h1>
