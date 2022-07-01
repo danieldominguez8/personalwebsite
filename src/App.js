@@ -1,11 +1,13 @@
 import React from 'react';
 import './App.css';
-import danny from './assets/danny.png';
+import danny from './assets/images/danny.png';
+import resume from "./assets/files/Resume.pdf";
+import { skillList, projectList } from './assets/helpers';
 
 function App() {
   return (
     <div className="body-container">
-      <div className="biography-section">
+      <div className="split-section">
         <div className="picture-container">
           <img className="biography-picture" src={danny} />
         </div>
@@ -24,19 +26,30 @@ function App() {
         </div>
       </div>
 
-      <div className="biography-section">
-        <div className="about-me-container">
+      <div className="split-section">
+        <div className="skills-container">
           <h1 className="biography-header">Skills</h1>
           <p className="about-me-text">
             While studying to be a Software Engineer at Drexel University, I have gained a solid foundation on the principles of software design, reliability, and testing.
-            I wrote code using test driven development and an agile software development process.
+            I developed code using test driven development and an agile software development process.
+            I had the opportunity to collaborate in multiple group projects with classmates to complete projects and tasks on schedule.
+            In my free time, I have developed applications and websites to hone my skills across multiple languages, frameworks, and tools.
+            If you would like to know more about my skills and projects, you may continue scrolling down to My Work or take a look at my <a href={resume} download>resume</a>.
           </p>
         </div>
-
-        <div className="about-me-container">
-
-
+        <div className="skills-boxes-container">
+          {skillList}
         </div>
+      </div>
+
+      <div className="split-section">
+        <div className="work-container">
+          <h1 className="biography-header">My Work</h1>
+          <div className="project-container">
+            {projectList}
+          </div>
+        </div>
+
       </div>
 
     </div>

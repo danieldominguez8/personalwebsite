@@ -3,20 +3,18 @@
   min-height: 300vh;
 }
 
-.biography-section {
+.split-section {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly
 }
 
 .picture-container {
-  /* background-color: black; */
   margin-top: 20%;
   width: 45%;
 }
 
 .about-me-container {
-  /* background-color: white; */
   margin-top: 30%;
   padding: 2%;
   text-align: justify;
@@ -43,4 +41,59 @@
   align-content: center;
   margin: auto;
   border-radius: 1%;
+}
+
+.skills-container {
+  margin-top: 15%;
+  padding: 2%;
+  text-align: justify;
+  width: 45%;
+}
+
+.skills-boxes-container {
+  margin-top: 20%;
+  padding: 2%;
+  text-align: justify;
+  width: 45%;
+}
+
+.chips {
+  margin: 1%;
+}
+
+.work-container {
+  padding: 2%;
+  text-align: justify;
+}
+
+.project-name {
+  margin-left: 5%;
+  font-weight: 550;
+  margin-bottom: 0%
+}
+
+.project-company,
+.project-description,
+.project-timeline,
+.project-tags-container {
+  margin-left: 5%;
+}
+
+.cards {
+  margin: .5%;
+  width: 49%;
+}
+
+.project-img {
+  width: 90%;
+  align-items: center;
+  align-content: center;
+  margin-left: 5%;
+}
+
+.project-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-content: center;
 }
