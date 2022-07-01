@@ -1,33 +1,21 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-
-.Body {
+.body-container {
   background-color: aliceblue;
   min-height: 300vh;
-  /* font-size: 10%; */
-
 }
 
-.splitScreen {
+.biography-section {
   display: flex;
   flex-direction: row;
   justify-content: space-evenly
 }
 
-.leftPane {
+.picture-container {
   /* background-color: black; */
   margin-top: 20%;
   width: 45%;
 }
 
-.rightPane {
+.about-me-container {
   /* background-color: white; */
   margin-top: 30%;
   padding: 2%;
@@ -35,21 +23,21 @@
   width: 45%;
 }
 
-.bioTitle {
+.biography-header {
   font-weight: 600;
   margin-bottom: 5%;
 }
 
-.bioH3 {
+.biography-section-header {
   font-weight: 550;
 }
 
-.bioText {
+.about-me-text {
   font-weight: 300;
   line-height: 2rem
 }
 
-.bioPic {
+.biography-picture {
   max-width: 100%;
   align-items: center;
   align-content: center;
