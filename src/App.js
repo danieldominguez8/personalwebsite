@@ -34,7 +34,7 @@ function App() {
             I developed code using test driven development and an agile software development process.
             I had the opportunity to collaborate in multiple group projects with classmates to complete projects and tasks on schedule.
             In my free time, I have developed applications and websites to hone my skills across multiple languages, frameworks, and tools.
-            If you would like to know more about my skills and projects, you may continue scrolling down to My Work or take a look at my <a href={resume} download>resume</a>.
+            If you would like to know more about my skills and projects, you may continue scrolling down to My Work or take a look at my <a href={resume} target="_blank" rel="noreferrer" download>resume</a>.
           </p>
         </div>
         <div className="skills-boxes-container">
@@ -42,9 +42,10 @@ function App() {
         </div>
       </div>
 
+      <h1 className="work-header">My Work</h1>
       <div className="split-section">
         <div className="work-container">
-          <h1 className="biography-header">My Work</h1>
+
           <div className="project-container">
             {projectList}
           </div>
