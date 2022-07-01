@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import danny from './assets/images/danny.png';
-import resume from "./assets/files/Resume.pdf";
+import resume from "./assets/files/danny_dominguez_resume.pdf";
 import { skillList, projectList } from './assets/helpers';
 
 function App() {
