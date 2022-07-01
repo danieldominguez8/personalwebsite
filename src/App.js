@@ -23,6 +23,22 @@ function App() {
           </p>
         </div>
       </div>
+
+      <div className="biography-section">
+        <div className="about-me-container">
+          <h1 className="biography-header">Skills</h1>
+          <p className="about-me-text">
+            While studying to be a Software Engineer at Drexel University, I have gained a solid foundation on the principles of software design, reliability, and testing.
+            I wrote code using test driven development and an agile software development process.
+          </p>
+        </div>
+
+        <div className="about-me-container">
+
+
+        </div>
+      </div>
+
     </div>
   );
 }
