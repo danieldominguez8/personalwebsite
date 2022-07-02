@@ -50,8 +50,16 @@ function App() {
             {projectList}
           </div>
         </div>
-
       </div>
+
+
+      <div className="help-container">
+        <h1 className="biography-header">Have a Project? Let's Build it.</h1>
+        <p className="about-me-text">
+          Feel free to reach out if you in need a developer or have any questions.
+          Website? Web app? Mobile App? Trying to fill a full-time position? Email me at <a href="mailto:dominguezdanieldev@gmail.com"> dominguezdanieldev@gmail.com</a></p>
+      </div>
+
 
     </div>
   );

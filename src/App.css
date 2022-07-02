@@ -1,6 +1,6 @@
 .body-container {
   background-color: aliceblue;
-  min-height: 300vh;
+  min-height: 350vh;
   font-size: calc(7px + .75vw);
 }
 
@@ -12,20 +12,19 @@
   align-content: center;
   align-items: center;
   text-align: center;
-  max-width: 2560px
+  margin: auto;
 }
 
 .picture-container {
   margin-top: 10%;
-  width: 45vw;
+  width: 40vw;
   min-width: 300px
 }
 
 .about-me-container {
   margin-top: 5vw;
-  padding: 2vw;
   text-align: justify;
-  width: 45%;
+  width: 40vw;
   min-width: 300px
 }
 
@@ -53,9 +52,8 @@
 
 .skills-container {
   margin-top: 10%;
-  padding: 2%;
   text-align: justify;
-  width: 45%;
+  width: 40vw;
   min-width: 300px
 }
 
@@ -63,7 +61,7 @@
   margin-top: 15%;
   padding: 2%;
   text-align: justify;
-  width: 45%;
+  width: 40%;
   min-width: 300px
 }
 
@@ -100,8 +98,8 @@
   align-items: center;
   align-content: center;
   margin: 0 auto;
-  margin-bottom: 1vh;
-  width: 45vw;
+  margin-bottom: 5vh;
+  width: 40vw;
   min-width: 300px
 }
 
@@ -117,4 +115,12 @@
   flex-wrap: wrap;
   flex-direction: row;
   align-content: center;
+}
+
+.help-container {
+  margin-top: 10vw;
+  margin: auto;
+  text-align: justify;
+  width: 90vw;
+  min-width: 300px
 }
