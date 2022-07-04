@@ -1,6 +1,6 @@
 .body-container {
   background-color: aliceblue;
-  min-height: 350vh;
+  min-height: 400vh;
   font-size: calc(7px + .75vw);
 }
 
