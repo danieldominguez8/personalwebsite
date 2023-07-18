@@ -17,14 +17,14 @@
 
 .picture-container {
   margin-top: 10%;
-  width: 40vw;
+  width: 45vw;
   min-width: 300px
 }
 
 .about-me-container {
   margin-top: 5vw;
   text-align: justify;
-  width: 40vw;
+  width: 45vw;
   min-width: 300px
 }
 
@@ -38,8 +38,8 @@
 }
 
 .about-me-text {
-  font-weight: 300;
-  line-height: 2.5vh
+  font-weight: 3;
+  line-height: 2.1vh
 }
 
 .biography-picture {
@@ -53,7 +53,7 @@
 .skills-container {
   margin-top: 10%;
   text-align: justify;
-  width: 40vw;
+  width: 45vw;
   min-width: 300px
 }
 
@@ -61,7 +61,7 @@
   margin-top: 15%;
   padding: 2%;
   text-align: justify;
-  width: 40%;
+  width: 45%;
   min-width: 300px
 }
 
