@@ -14,14 +14,18 @@ function App() {
         <div className="about-me-container">
           <h1 className="biography-header">Hello, my name is Danny Dominguez and I'm a Software Engineer</h1>
           <h3 className="biography-section-header">About Me</h3>
-          <p className="about-me-text">I am a passionate Software Engineer with high aspirations.
-            I am en route to earning my M.S. in Software Engineering at Drexel University by the end of the summer quarter.
-            I have studied under amazing professors and worked alongside great classmates on various projects.
-            I have learned in-depth about software design, architecture, and requirements and have had experience working with JavaScript frameworks (ReactNative and ReactJS).
+          <p className="about-me-text">
+            I am an enthusiastic individual with a passion for challenging myself and striving for excellence.
+            I currently hold the position of Associate Software Engineer, where I harness my skills in .NET Framework to deliver high-quality software solutions.
+            I earned my M.S. in Software Engineering from Drexel University in 2022, an achievement that underpins my technical skills and dedication to my field.
+            At Drexel, I studied in-depth about software design, architecture, and requirements and have had experience working with JavaScript frameworks (ReactNative and ReactJS).
+
           </p>
           <h3 className="biography-section-header">Hobbies</h3>
           <p className="about-me-text">
-            I love learning, coding, traveling, staying active, and spending time with my family and friends.
+            As a lifelong learner, my interests span from technology to the health sector.
+            Coding isn't just my job—it's also a hobby of mine, I enjoy finding solutions to my everyday tasks.
+            Beyond work, I love to travel and stay active and spend as much time with family and friends and my dog named Todd.
           </p>
         </div>
       </div>
@@ -30,11 +34,11 @@ function App() {
         <div className="skills-container">
           <h1 className="biography-header">Skills</h1>
           <p className="about-me-text">
-            While studying to be a Software Engineer at Drexel University, I have gained a solid foundation on the principles of software design, reliability, and testing.
-            I developed code using test driven development and an agile software development process.
-            I had the opportunity to collaborate in multiple group projects with classmates to complete projects and tasks on schedule.
-            In my free time, I have developed applications and websites to hone my skills across multiple languages, frameworks, and tools.
-            If you would like to know more about my skills and projects, you may continue scrolling down to My Work or take a look at my <a href={resume} target="_blank" rel="noreferrer" download>resume</a>.
+            In my professional journey, I've had the privilege of working on real-world software solutions, which has allowed me to hone my proficiency in both the .NET Framework and various JavaScript frameworks.
+            I place a strong emphasis on testing all software to ensure reliability and maintain a clean code base.
+            Collaboration has been an integral part of my professional development. Working under the mentorship of gifted managers and collaborating with dedicated colleagues on various projects has helped me to enhance my teamwork skills, contributing significantly to successful project completions. Our teams often employed agile methodologies such as scrum and kanban, fostering a dynamic and effective work environment.
+            In my spare time, I enjoy further developing my skillset by creating applications and websites, experimenting with multiple languages, frameworks, and tools.
+            If you're interested in learning more about my skills and projects, feel free to explore the 'My Work' section below or take a look at my  <a href={resume} target="_blank" rel="noreferrer" download>resume</a>.
           </p>
         </div>
         <div className="skills-boxes-container">

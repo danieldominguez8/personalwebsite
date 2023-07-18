@@ -56,7 +56,7 @@ projects.forEach((project, index) => {
 export const projectList = projectsList;
 
 
-const skills = ['React', 'React Native', 'Java', 'JavaScript', 'Amplify', 'Python', 'C++', 'NoSQL', 'Dialogflow', 'Android', 'iOS', 'HTML', 'CSS', 'Unit testing', 'TDD', 'Agile'];
+const skills = ['.NET', 'C#', 'Visual Basic', 'NUnit', 'xUnit', 'Moq', 'React', 'React Native', 'Java', 'JavaScript', 'Amplify', 'Python', 'C++', 'NoSQL', 'Dialogflow', 'Android', 'iOS', 'HTML', 'CSS', 'Unit testing', 'TDD', 'Agile'];
 let skillsList = [];
 skills.forEach((skill, index) => {
     skillsList.push(<Chip key={index} className="chips" label={skill} />)
