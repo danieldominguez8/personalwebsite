@@ -41,7 +41,7 @@ function App() {
             I place a strong emphasis on writing clean, testable code (utilizing <strong>NUnit and Moq</strong>) and ensuring software reliability. 
             Collaboration is key to my approach; working within <strong>Agile teams using Scrum and Kanban</strong>, 
             I've contributed to successful project completions. 
-            Explore my skills below or view my <a href={resumePdf} target="_blank" rel="noreferrer" download className="resume-link">resume</a> for more details.
+            Explore my skills below or view my <a href={resume} target="_blank" rel="noreferrer" download>resume</a> for more details.
           </p>
         </div>
         <div className="skills-boxes-container">
