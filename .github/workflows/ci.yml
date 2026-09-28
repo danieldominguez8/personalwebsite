@@ -30,6 +30,9 @@ jobs:
     needs: static
     runs-on: ubuntu-latest
     container: mcr.microsoft.com/playwright:v1.63.0-noble
+    env:
+      # Firefox refuses to launch when $HOME is owned by another user (Playwright container + GitHub Actions).
+      HOME: /root
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
