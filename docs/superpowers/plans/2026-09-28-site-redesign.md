@@ -74,12 +74,14 @@ Removed: `src/App.js`, `src/App.css`, `src/App.test.js`, `src/index.js`, `src/in
 ### Task 1: Scaffold Astro on the `redesign` branch
 
 **Files:**
+
 - Delete: the CRA files listed under "Removed" above
 - Create: `package.json` (rewrite), `astro.config.mjs`, `tsconfig.json`, `vitest.config.ts`, `eslint.config.js`, `.prettierrc`, `.prettierignore`, `.nvmrc`, `src/pages/index.astro` (temporary), `tests/unit/smoke.test.ts` (temporary, deleted in Task 2)
 - Move: `src/assets/files/danny_dominguez_resume.pdf` → `public/resume.pdf`
 - Modify: `.gitignore`
 
 **Interfaces:**
+
 - Produces: npm scripts used by every later task — `dev`, `build`, `preview`, `check`, `lint`, `format:check`, `test`, `test:e2e`, `test:visual`, `validate:html`, `links`, `lhci`, `test:all`.
 
 - [ ] **Step 1: Confirm starting point**
@@ -136,6 +138,7 @@ Expected: completes; npm may print an `install-scripts` notice — ignore it (se
 - [ ] **Step 5: Config files**
 
 `astro.config.mjs`:
+
 ```js
 import { defineConfig } from "astro/config";
 
@@ -147,6 +150,7 @@ export default defineConfig({
 ```
 
 `tsconfig.json`:
+
 ```json
 {
   "extends": "astro/tsconfigs/strict",
@@ -156,6 +160,7 @@ export default defineConfig({
 ```
 
 `vitest.config.ts`:
+
 ```ts
 import { getViteConfig } from "astro/config";
 
@@ -165,23 +170,35 @@ export default getViteConfig({
 ```
 
 `eslint.config.js`:
+
 ```js
 import astro from "eslint-plugin-astro";
 import tseslint from "typescript-eslint";
 
 export default [
-  { ignores: ["dist/", ".astro/", ".superpowers/", "playwright-report/", "test-results/", ".lighthouseci/"] },
+  {
+    ignores: [
+      "dist/",
+      ".astro/",
+      ".superpowers/",
+      "playwright-report/",
+      "test-results/",
+      ".lighthouseci/",
+    ],
+  },
   ...tseslint.configs.recommended,
   ...astro.configs.recommended,
 ];
 ```
 
 `.prettierrc`:
+
 ```json
 { "plugins": ["prettier-plugin-astro"], "printWidth": 100 }
 ```
 
 `.prettierignore`:
+
 ```
 dist
 .astro
@@ -196,11 +213,13 @@ public
 ```
 
 `.nvmrc`:
+
 ```
 24
 ```
 
 Append to `.gitignore`:
+
 ```
 # astro / test output
 dist/
@@ -213,13 +232,24 @@ test-results/
 - [ ] **Step 6: Temporary page and smoke test**
 
 `src/pages/index.astro`:
+
 ```astro
 ---
 ---
-<html lang="en"><head><meta charset="utf-8" /><title>Danny Dominguez</title></head><body><h1>Danny Dominguez</h1></body></html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Danny Dominguez</title>
+  </head>
+  <body>
+    <h1>Danny Dominguez</h1>
+  </body>
+</html>
 ```
 
 `tests/unit/smoke.test.ts`:
+
 ```ts
 import { test, expect } from "vitest";
 test("toolchain runs", () => {
@@ -246,11 +276,13 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 2: Content data, schemas, and date formatting
 
 **Files:**
+
 - Create: `src/lib/dates.ts`, `src/data/schema.ts`, `src/data/profile.ts`, `src/data/experience.ts`, `src/data/projects.ts`, `src/data/skills.ts`, `public/images/*.jpg`
 - Test: `tests/unit/dates.test.ts`, `tests/unit/data.test.ts`
 - Delete: `tests/unit/smoke.test.ts`
 
 **Interfaces:**
+
 - Produces:
   - `formatRange(start: string, end?: string): string` — `start`/`end` are `"YYYY"` or `"YYYY-MM"` or `"present"`; returns e.g. `"Dec 2024 – Present"`, `"2020 – 2022"`, `"2026"` (no end), en dash with spaces.
   - Types `Profile`, `Company`, `Role`, `Education`, `Project`, `SkillGroup`, `ImageRef` from `src/data/schema.ts`, plus schemas `profileSchema`, `experienceSchema`, `educationSchema`, `projectsSchema`, `skillsSchema`.
@@ -259,6 +291,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 - [ ] **Step 1: Write the failing date tests**
 
 `tests/unit/dates.test.ts`:
+
 ```ts
 import { describe, test, expect } from "vitest";
 import { formatRange } from "../../src/lib/dates";
@@ -335,6 +368,7 @@ Expected dimensions (record the actual numbers printed; use them in the data fil
 - [ ] **Step 6: Write the failing data tests**
 
 `tests/unit/data.test.ts`:
+
 ```ts
 import { describe, test, expect } from "vitest";
 import { existsSync } from "node:fs";
@@ -354,7 +388,11 @@ describe("content data", () => {
   });
 
   test("every image exists on disk and has alt text", () => {
-    const images = [profile.headshot, profile.photo, ...projects.flatMap((p) => (p.image ? [p.image] : []))];
+    const images = [
+      profile.headshot,
+      profile.photo,
+      ...projects.flatMap((p) => (p.image ? [p.image] : [])),
+    ];
     for (const img of images) {
       expect(existsSync(publicPath(img.src)), img.src).toBe(true);
       expect(img.alt.trim().length).toBeGreaterThan(10);
@@ -407,7 +445,9 @@ describe("content data", () => {
   });
 
   test("key copy matches the approved canvas", () => {
-    expect(profile.headline).toBe("I build reliable payment platforms and backend services in .NET and Azure.");
+    expect(profile.headline).toBe(
+      "I build reliable payment platforms and backend services in .NET and Azure.",
+    );
     expect(profile.title).toBe("Software Engineer II at Invoice Cloud");
     expect(profile.location).toBe("McAllen, TX");
     expect(skills.map((s) => s.group)).toEqual([
@@ -511,6 +551,7 @@ export type SkillGroup = z.infer<typeof skillsSchema>[number];
 - [ ] **Step 9: Write the data files (copy verbatim from the canvas)**
 
 `src/data/profile.ts`:
+
 ```ts
 import { profileSchema } from "./schema";
 
@@ -526,8 +567,18 @@ export const profile = profileSchema.parse({
   github: "https://github.com/danieldominguez8",
   linkedin: "https://www.linkedin.com/in/dannyddominguez/",
   resume: "/resume.pdf",
-  headshot: { src: "/images/headshot.jpg", alt: "Portrait of Danny Dominguez", width: 240, height: 240 },
-  photo: { src: "/images/danny.jpg", alt: "Danny Dominguez at the Hoover Dam", width: 1096, height: 1500 },
+  headshot: {
+    src: "/images/headshot.jpg",
+    alt: "Portrait of Danny Dominguez",
+    width: 240,
+    height: 240,
+  },
+  photo: {
+    src: "/images/danny.jpg",
+    alt: "Danny Dominguez at the Hoover Dam",
+    width: 1096,
+    height: 1500,
+  },
   about: [
     "I'm based in McAllen, Texas. Coding is my job and also a hobby: I like finding software fixes for everyday problems.",
     "Outside of work I travel, stay active, and spend time with family, friends, and my dog, Todd.",
@@ -537,6 +588,7 @@ export const profile = profileSchema.parse({
 ```
 
 `src/data/experience.ts`:
+
 ```ts
 import { educationSchema, experienceSchema } from "./schema";
 
@@ -578,6 +630,7 @@ export const education = educationSchema.parse([
 ```
 
 `src/data/projects.ts` (replace `width`/`height` with the numbers printed in Step 5):
+
 ```ts
 import { projectsSchema } from "./schema";
 
@@ -598,7 +651,12 @@ export const projects = projectsSchema.parse([
       height: 1400,
     },
     layout: "card",
-    links: [{ label: "App Store", url: "https://apps.apple.com/us/app/loter%C3%ADa-tradicional/id1612279702" }],
+    links: [
+      {
+        label: "App Store",
+        url: "https://apps.apple.com/us/app/loter%C3%ADa-tradicional/id1612279702",
+      },
+    ],
   },
   {
     name: "FreeTogether",
@@ -646,21 +704,50 @@ export const projects = projectsSchema.parse([
       "A chatbot that lets students talk with historical role models, trained on first-person narratives from a custom web scraper.",
     stack: ["React Native", "Dialogflow", "Firebase", "Python"],
     layout: "row",
-    links: [{ label: "GitHub", url: "https://github.com/shaquille-hall/se691-conversational-agent" }],
+    links: [
+      { label: "GitHub", url: "https://github.com/shaquille-hall/se691-conversational-agent" },
+    ],
   },
 ]);
 ```
 
 `src/data/skills.ts`:
+
 ```ts
 import { skillsSchema } from "./schema";
 
 export const skills = skillsSchema.parse([
-  { group: "Backend & APIs", items: [".NET 8", ".NET Framework", "ASP.NET Core", "WCF", "REST", "SOAP"] },
-  { group: "Payments", items: ["Datacap", "Chase Orbital Gateway", "J.P. Morgan Commerce Platform", "Cybersource", "Bluefin"] },
+  {
+    group: "Backend & APIs",
+    items: [".NET 8", ".NET Framework", "ASP.NET Core", "WCF", "REST", "SOAP"],
+  },
+  {
+    group: "Payments",
+    items: [
+      "Datacap",
+      "Chase Orbital Gateway",
+      "J.P. Morgan Commerce Platform",
+      "Cybersource",
+      "Bluefin",
+    ],
+  },
   { group: "Languages", items: ["C#", "SQL", "Python", "JavaScript", "Visual Basic"] },
-  { group: "AI & automation", items: ["Claude", "OpenAI Codex", "Cursor", "reusable AI skills", "workflow automation"] },
-  { group: "Cloud & delivery", items: ["Azure App Service", "Functions", "Key Vault", "Azure DevOps", "CI/CD", "Git", "GitHub"] },
+  {
+    group: "AI & automation",
+    items: ["Claude", "OpenAI Codex", "Cursor", "reusable AI skills", "workflow automation"],
+  },
+  {
+    group: "Cloud & delivery",
+    items: [
+      "Azure App Service",
+      "Functions",
+      "Key Vault",
+      "Azure DevOps",
+      "CI/CD",
+      "Git",
+      "GitHub",
+    ],
+  },
   { group: "Databases", items: ["SQL Server", "Oracle", "MySQL"] },
   { group: "Testing", items: ["NUnit", "Moq", "Playwright"] },
 ]);
@@ -690,17 +777,20 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 3: Design tokens, base layout, header, and footer
 
 **Files:**
+
 - Create: `src/styles/global.css`, `src/layouts/Base.astro`, `src/components/Header.astro`, `src/components/Footer.astro`, `public/robots.txt`
 - Modify: `src/pages/index.astro`
 - Test: `tests/components/layout.test.ts`
 
 **Interfaces:**
+
 - Consumes: `profile` from `src/data/profile.ts`.
 - Produces: `Base.astro` with props `{ title: string; description: string; }` and a default slot rendered inside `<main id="main">`. `Header.astro`, `Footer.astro` take no props. CSS custom properties used by later tasks: `--ground --surface --text --body --secondary --muted --rule --accent --font-display --font-body --col --pad-section --gap-section`. Utility classes: `.container`, `.section`, `.section-title`, `.btn`, `.muted`.
 
 - [ ] **Step 1: Write the failing layout test**
 
 `tests/components/layout.test.ts`:
+
 ```ts
 import { experimental_AstroContainer as AstroContainer } from "astro/container";
 import { beforeAll, describe, expect, test } from "vitest";
@@ -889,6 +979,7 @@ a {
 - [ ] **Step 4: Write `Header.astro` and `Footer.astro`**
 
 `src/components/Header.astro`:
+
 ```astro
 ---
 import { profile } from "../data/profile";
@@ -899,18 +990,27 @@ const sections = [
   { id: "about", label: "About" },
 ];
 ---
+
 <header class="site-header">
   <div class="container bar">
     <a href="#top" class="brand">
-      <span class="badge" aria-hidden="true">DD</span>
+      <span class="badge" aria-hidden="true">
+        DD
+      </span>
       <span>{profile.name}</span>
     </a>
     <nav aria-label="Sections">
       <ul>
         {sections.map((s) => (
-          <li class="nav-link"><a href={`#${s.id}`}>{s.label}</a></li>
+          <li class="nav-link">
+            <a href={`#${s.id}`}>{s.label}</a>
+          </li>
         ))}
-        <li><a class="btn btn-small" href={profile.resume}>Resume</a></li>
+        <li>
+          <a class="btn btn-small" href={profile.resume}>
+            Resume
+          </a>
+        </li>
       </ul>
     </nav>
   </div>
@@ -974,18 +1074,28 @@ const sections = [
 ```
 
 `src/components/Footer.astro`:
+
 ```astro
 ---
 import { profile } from "../data/profile";
 const year = new Date().getFullYear();
 ---
+
 <footer class="site-footer">
   <div class="container bar">
-    <span>© {year} {profile.name}</span>
+    <span>
+      © {year} {profile.name}
+    </span>
     <ul>
-      <li><a href={profile.github}>GitHub</a></li>
-      <li><a href={profile.linkedin}>LinkedIn</a></li>
-      <li><a href={profile.resume}>Resume</a></li>
+      <li>
+        <a href={profile.github}>GitHub</a>
+      </li>
+      <li>
+        <a href={profile.linkedin}>LinkedIn</a>
+      </li>
+      <li>
+        <a href={profile.resume}>Resume</a>
+      </li>
     </ul>
   </div>
 </footer>
@@ -1038,6 +1148,7 @@ const { title, description } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const ogImage = new URL("/images/headshot.jpg", Astro.site).href;
 ---
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -1058,7 +1169,9 @@ const ogImage = new URL("/images/headshot.jpg", Astro.site).href;
     <meta name="twitter:card" content="summary" />
   </head>
   <body id="top">
-    <a class="skip-link" href="#main">Skip to content</a>
+    <a class="skip-link" href="#main">
+      Skip to content
+    </a>
     <Header />
     <main id="main" class="container">
       <slot />
@@ -1071,10 +1184,12 @@ const ogImage = new URL("/images/headshot.jpg", Astro.site).href;
 - [ ] **Step 6: Use the layout on the page, add robots.txt**
 
 `src/pages/index.astro`:
+
 ```astro
 ---
 import Base from "../layouts/Base.astro";
 ---
+
 <Base
   title="Danny Dominguez — Software Engineer"
   description="Danny Dominguez, software engineer building payment platforms and backend services in .NET and Azure. Experience, projects, skills, and contact."
@@ -1084,12 +1199,14 @@ import Base from "../layouts/Base.astro";
 ```
 
 `public/robots.txt`:
+
 ```
 User-agent: *
 Allow: /
 
 Sitemap: https://www.dannydominguez.dev/sitemap-index.xml
 ```
+
 (Remove the `Sitemap:` line if Task 9 does not add `@astrojs/sitemap`; Task 9 adds it.)
 
 - [ ] **Step 7: Run tests and gates**
@@ -1111,17 +1228,20 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 4: Hero and Experience sections
 
 **Files:**
+
 - Create: `src/components/Hero.astro`, `src/components/Experience.astro`
 - Modify: `src/pages/index.astro`
 - Test: `tests/components/hero-experience.test.ts`
 
 **Interfaces:**
+
 - Consumes: `profile`, `companies`, `education`, `formatRange`.
 - Produces: `Hero.astro` (no props), `Experience.astro` (no props; renders `<section id="experience">`).
 
 - [ ] **Step 1: Write the failing tests**
 
 `tests/components/hero-experience.test.ts`:
+
 ```ts
 import { experimental_AstroContainer as AstroContainer } from "astro/container";
 import { beforeAll, describe, expect, test } from "vitest";
@@ -1196,6 +1316,7 @@ Expected: FAIL — cannot resolve `Hero.astro`.
 ---
 import { profile } from "../data/profile";
 ---
+
 <section class="hero" aria-labelledby="hero-title">
   <div class="identity">
     <img
@@ -1208,16 +1329,28 @@ import { profile } from "../data/profile";
     />
     <div>
       <p class="name">{profile.name}</p>
-      <p class="muted meta">{profile.title} · {profile.location}</p>
+      <p class="muted meta">
+        {profile.title} · {profile.location}
+      </p>
     </div>
   </div>
   <h1 id="hero-title">{profile.headline}</h1>
   <p class="intro">{profile.intro}</p>
   <ul class="actions">
-    <li><a class="btn" href={profile.resume}>Download resume</a></li>
-    <li><a href={profile.github}>GitHub</a></li>
-    <li><a href={profile.linkedin}>LinkedIn</a></li>
-    <li><a href={`mailto:${profile.email}`}>Email</a></li>
+    <li>
+      <a class="btn" href={profile.resume}>
+        Download resume
+      </a>
+    </li>
+    <li>
+      <a href={profile.github}>GitHub</a>
+    </li>
+    <li>
+      <a href={profile.linkedin}>LinkedIn</a>
+    </li>
+    <li>
+      <a href={`mailto:${profile.email}`}>Email</a>
+    </li>
   </ul>
   <p class="muted meta">{profile.availability}</p>
 </section>
@@ -1298,22 +1431,31 @@ import { profile } from "../data/profile";
 import { companies, education } from "../data/experience";
 import { formatRange } from "../lib/dates";
 ---
+
 <section id="experience" class="section" aria-labelledby="experience-title">
-  <h2 id="experience-title" class="section-title">Experience</h2>
+  <h2 id="experience-title" class="section-title">
+    Experience
+  </h2>
   {companies.map((c) => (
     <div class="company">
       <div class="row">
         <h3 class="org">{c.company}</h3>
-        <span class="muted when"><time datetime={c.start}>{formatRange(c.start, c.end)}</time></span>
+        <span class="muted when">
+          <time datetime={c.start}>{formatRange(c.start, c.end)}</time>
+        </span>
       </div>
       {c.roles.map((r) => (
         <div class="role">
           <div class="row">
             <h4>{r.title}</h4>
-            <span class="muted when"><time datetime={r.start}>{formatRange(r.start, r.end)}</time></span>
+            <span class="muted when">
+              <time datetime={r.start}>{formatRange(r.start, r.end)}</time>
+            </span>
           </div>
           <ul>
-            {r.bullets.map((b) => <li>{b}</li>)}
+            {r.bullets.map((b) => (
+              <li>{b}</li>
+            ))}
           </ul>
         </div>
       ))}
@@ -1325,7 +1467,9 @@ import { formatRange } from "../lib/dates";
         <h3 class="org">{e.school}</h3>
         <p>{e.degree}</p>
       </div>
-      <span class="muted when"><time datetime={e.start}>{formatRange(e.start, e.end)}</time></span>
+      <span class="muted when">
+        <time datetime={e.start}>{formatRange(e.start, e.end)}</time>
+      </span>
     </div>
   ))}
 </section>
@@ -1393,19 +1537,22 @@ import { formatRange } from "../lib/dates";
 </style>
 ```
 
-Note: the canvas puts the date *under* the title on phones; `flex-wrap` achieves that when the row runs out of width. The visual baseline in Task 8 confirms it.
+Note: the canvas puts the date _under_ the title on phones; `flex-wrap` achieves that when the row runs out of width. The visual baseline in Task 8 confirms it.
 
 - [ ] **Step 5: Compose them on the page**
 
 In `src/pages/index.astro`, replace `<h1>Danny Dominguez</h1>` with:
+
 ```astro
-  <Hero />
-  <Experience />
+<Hero />
+<Experience />
 ```
+
 and add imports:
+
 ```astro
-import Hero from "../components/Hero.astro";
-import Experience from "../components/Experience.astro";
+import Hero from "../components/Hero.astro"; import Experience from
+"../components/Experience.astro";
 ```
 
 - [ ] **Step 6: Run tests and gates**
@@ -1427,17 +1574,20 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 5: Projects section
 
 **Files:**
+
 - Create: `src/components/Projects.astro`, `src/components/ProjectCard.astro`, `src/components/ProjectRow.astro`
 - Modify: `src/pages/index.astro`
 - Test: `tests/components/projects.test.ts`
 
 **Interfaces:**
+
 - Consumes: `projects`, `Project` type, `formatRange`.
 - Produces: `ProjectCard.astro` and `ProjectRow.astro`, each with props `{ project: Project }`; `Projects.astro` (no props; renders `<section id="projects">`).
 
 - [ ] **Step 1: Write the failing tests**
 
 `tests/components/projects.test.ts`:
+
 ```ts
 import { experimental_AstroContainer as AstroContainer } from "astro/container";
 import { beforeAll, describe, expect, test } from "vitest";
@@ -1473,11 +1623,13 @@ describe("ProjectCard", () => {
     expect(html).toContain(p.stack.join(" · "));
     expect(html).toMatch(/<img[^>]*loading="lazy"/);
     expect(html).toContain(`alt="${p.image!.alt}"`);
-    expect(html).toContain('>App Store<');
+    expect(html).toContain(">App Store<");
   });
 
   test("omits figure and link list when absent", async () => {
-    const html = await container.renderToString(ProjectCard, { props: { project: byName("FreeTogether") } });
+    const html = await container.renderToString(ProjectCard, {
+      props: { project: byName("FreeTogether") },
+    });
     expect(html).not.toContain('class="figure"');
     expect(html).not.toContain('class="links"');
     expect(html).toContain("Personal project · 2026");
@@ -1486,12 +1638,16 @@ describe("ProjectCard", () => {
 
 describe("ProjectRow", () => {
   test("renders text-only project with optional link", async () => {
-    const withLink = await container.renderToString(ProjectRow, { props: { project: byName("dannydominguez.dev") } });
+    const withLink = await container.renderToString(ProjectRow, {
+      props: { project: byName("dannydominguez.dev") },
+    });
     expect(withLink).toContain("Personal project · 2022 – Present");
     expect(withLink).toContain('href="https://github.com/danieldominguez8/personalwebsite"');
     expect(withLink).not.toContain("<img");
 
-    const noLink = await container.renderToString(ProjectRow, { props: { project: byName("Rally Competitions") } });
+    const noLink = await container.renderToString(ProjectRow, {
+      props: { project: byName("Rally Competitions") },
+    });
     expect(noLink).toContain("Founder · 2026");
     expect(noLink).not.toContain("<a ");
   });
@@ -1520,19 +1676,35 @@ interface Props {
 }
 const { project: p } = Astro.props;
 ---
+
 <article class="card">
   {p.image && (
-    <img src={p.image.src} alt={p.image.alt} width={p.image.width} height={p.image.height} loading="lazy" decoding="async" />
+    <img
+      src={p.image.src}
+      alt={p.image.alt}
+      width={p.image.width}
+      height={p.image.height}
+      loading="lazy"
+      decoding="async"
+    />
   )}
   <div class="body">
     {p.figure && <p class="figure">{p.figure}</p>}
     <h3>{p.name}</h3>
-    <p class="muted small">{p.role} · {formatRange(p.start, p.end)}</p>
+    <p class="muted small">
+      {p.role} · {formatRange(p.start, p.end)}
+    </p>
     <p class="desc">{p.description}</p>
     <p class="muted small">{p.stack.join(" · ")}</p>
     {p.links.length > 0 && (
       <ul class="links">
-        {p.links.map((l) => <li><a href={l.url} rel="noopener">{l.label}</a></li>)}
+        {p.links.map((l) => (
+          <li>
+            <a href={l.url} rel="noopener">
+              {l.label}
+            </a>
+          </li>
+        ))}
       </ul>
     )}
   </div>
@@ -1614,16 +1786,25 @@ interface Props {
 }
 const { project: p } = Astro.props;
 ---
+
 <article class="row">
   <div class="text">
     <h3>{p.name}</h3>
-    <p class="muted small">{p.role} · {formatRange(p.start, p.end)}</p>
+    <p class="muted small">
+      {p.role} · {formatRange(p.start, p.end)}
+    </p>
     <p class="desc">{p.description}</p>
     <p class="muted small">{p.stack.join(" · ")}</p>
   </div>
   {p.links.length > 0 && (
     <ul class="links">
-      {p.links.map((l) => <li><a href={l.url} rel="noopener">{l.label}</a></li>)}
+      {p.links.map((l) => (
+        <li>
+          <a href={l.url} rel="noopener">
+            {l.label}
+          </a>
+        </li>
+      ))}
     </ul>
   )}
 </article>
@@ -1687,13 +1868,20 @@ import ProjectRow from "./ProjectRow.astro";
 const cards = projects.filter((p) => p.layout === "card");
 const rows = projects.filter((p) => p.layout === "row");
 ---
+
 <section id="projects" class="section" aria-labelledby="projects-title">
-  <h2 id="projects-title" class="section-title">Selected projects</h2>
+  <h2 id="projects-title" class="section-title">
+    Selected projects
+  </h2>
   <div class="grid">
-    {cards.map((p) => <ProjectCard project={p} />)}
+    {cards.map((p) => (
+      <ProjectCard project={p} />
+    ))}
   </div>
   <div class="rows">
-    {rows.map((p) => <ProjectRow project={p} />)}
+    {rows.map((p) => (
+      <ProjectRow project={p} />
+    ))}
   </div>
 </section>
 
@@ -1737,17 +1925,20 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 6: Skills, About, Contact, and built-HTML gates
 
 **Files:**
+
 - Create: `src/components/Skills.astro`, `src/components/About.astro`, `src/components/Contact.astro`, `.htmlvalidate.json`
 - Modify: `src/pages/index.astro`
 - Test: `tests/components/rest.test.ts`, `tests/html/dist.test.ts`
 
 **Interfaces:**
+
 - Consumes: `skills`, `profile`.
 - Produces: the complete page; `dist/index.html` consumed by all later gates.
 
 - [ ] **Step 1: Write the failing component tests**
 
 `tests/components/rest.test.ts`:
+
 ```ts
 import { experimental_AstroContainer as AstroContainer } from "astro/container";
 import { beforeAll, describe, expect, test } from "vitest";
@@ -1796,12 +1987,16 @@ Expected: FAIL — cannot resolve `Skills.astro`.
 - [ ] **Step 3: Implement the three components**
 
 `src/components/Skills.astro`:
+
 ```astro
 ---
 import { skills } from "../data/skills";
 ---
+
 <section id="skills" class="section" aria-labelledby="skills-title">
-  <h2 id="skills-title" class="section-title">Skills</h2>
+  <h2 id="skills-title" class="section-title">
+    Skills
+  </h2>
   <dl>
     {skills.map((s) => (
       <div class="item">
@@ -1843,55 +2038,96 @@ import { skills } from "../data/skills";
 ```
 
 `src/components/About.astro` (heading, then photo, then text on phones; photo left of heading+text on desktop — matches the canvas):
+
 ```astro
 ---
 import { profile } from "../data/profile";
 ---
+
 <section id="about" class="section about" aria-labelledby="about-title">
-  <h2 id="about-title" class="section-title heading">About</h2>
-  <img src={profile.photo.src} alt={profile.photo.alt} width={profile.photo.width} height={profile.photo.height} loading="lazy" decoding="async" />
+  <h2 id="about-title" class="section-title heading">
+    About
+  </h2>
+  <img
+    src={profile.photo.src}
+    alt={profile.photo.alt}
+    width={profile.photo.width}
+    height={profile.photo.height}
+    loading="lazy"
+    decoding="async"
+  />
   <div class="text">
-    {profile.about.map((p) => <p>{p}</p>)}
+    {profile.about.map((p) => (
+      <p>{p}</p>
+    ))}
   </div>
 </section>
 ```
+
 with this `<style>` block in the same file:
+
 ```css
+.about {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  grid-template-areas: "img heading" "img text";
+  grid-template-rows: auto 1fr;
+  column-gap: 40px;
+  row-gap: 16px;
+}
+.heading {
+  grid-area: heading;
+}
+img {
+  grid-area: img;
+  width: 240px;
+  height: 300px;
+  object-fit: cover;
+  object-position: center 30%;
+  border-radius: 12px;
+}
+.text {
+  grid-area: text;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+p {
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--body);
+}
+@media (max-width: 767px) {
   .about {
-    display: grid;
-    grid-template-columns: 240px minmax(0, 1fr);
-    grid-template-areas: "img heading" "img text";
-    grid-template-rows: auto 1fr;
-    column-gap: 40px;
-    row-gap: 16px;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "heading" "img" "text";
+    row-gap: 18px;
   }
-  .heading { grid-area: heading; }
   img {
-    grid-area: img;
-    width: 240px;
+    width: 100%;
     height: 300px;
-    object-fit: cover;
-    object-position: center 30%;
-    border-radius: 12px;
   }
-  .text { grid-area: text; display: flex; flex-direction: column; gap: 16px; }
-  p { font-size: 17px; line-height: 1.7; color: var(--body); }
-  @media (max-width: 767px) {
-    .about { grid-template-columns: minmax(0, 1fr); grid-template-areas: "heading" "img" "text"; row-gap: 18px; }
-    img { width: 100%; height: 300px; }
-    p { font-size: 16px; }
+  p {
+    font-size: 16px;
   }
+}
 ```
 
 `src/components/Contact.astro`:
+
 ```astro
 ---
 import { profile } from "../data/profile";
 ---
+
 <section id="contact" class="section contact" aria-labelledby="contact-title">
-  <h2 id="contact-title" class="title">Let's talk.</h2>
+  <h2 id="contact-title" class="title">
+    Let's talk.
+  </h2>
   <p>{profile.contactNote}</p>
-  <a class="email" href={`mailto:${profile.email}`}>{profile.email}</a>
+  <a class="email" href={`mailto:${profile.email}`}>
+    {profile.email}
+  </a>
 </section>
 
 <style>
@@ -1937,6 +2173,7 @@ Expected: 3 passed.
 - [ ] **Step 5: Write the failing built-HTML test**
 
 `tests/html/dist.test.ts`:
+
 ```ts
 import { beforeAll, describe, expect, test } from "vitest";
 import { readFileSync, existsSync } from "node:fs";
@@ -2009,11 +2246,12 @@ describe("built index.html", () => {
 - [ ] **Step 6: Run to verify it catches problems, then passes**
 
 Run: `npm run build && npx vitest run tests/html/dist.test.ts`
-Expected: PASS if Tasks 3–6 are correct. If `no inline styles` fails, Astro inlined component styles as `style` *elements* (allowed) — the regex only rejects `style="` attributes; fix any real attribute.
+Expected: PASS if Tasks 3–6 are correct. If `no inline styles` fails, Astro inlined component styles as `style` _elements_ (allowed) — the regex only rejects `style="` attributes; fix any real attribute.
 
 - [ ] **Step 7: HTML validation**
 
 `.htmlvalidate.json`:
+
 ```json
 {
   "extends": ["html-validate:recommended"],
@@ -2030,6 +2268,7 @@ Expected: no errors. Fix markup for any real error; do not disable further rules
 - [ ] **Step 8: Keep the dist test out of the plain unit run until built**
 
 Change `vitest.config.ts` to:
+
 ```ts
 import { getViteConfig } from "astro/config";
 
@@ -2040,6 +2279,7 @@ export default getViteConfig({
   },
 });
 ```
+
 and add the script `"test:dist": "WITH_DIST=1 vitest run tests/html"` to `package.json`; update `test:all` to run `npm run test:dist` right after `npm run build`.
 
 - [ ] **Step 9: Run everything so far**
@@ -2061,9 +2301,11 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 7: End-to-end, responsive, keyboard, and accessibility tests
 
 **Files:**
+
 - Create: `playwright.config.ts`, `e2e/navigation.spec.ts`, `e2e/responsive.spec.ts`, `e2e/a11y.spec.ts`
 
 **Interfaces:**
+
 - Consumes: the built site served by `npm run preview` on port 4321.
 - Produces: Playwright projects `chromium`, `firefox`, `webkit` (functional) and `visual` (Task 8).
 
@@ -2097,7 +2339,12 @@ export default defineConfig({
   ],
   webServer: external
     ? undefined
-    : { command: "npm run preview", url: baseURL, reuseExistingServer: !process.env.CI, timeout: 60_000 },
+    : {
+        command: "npm run preview",
+        url: baseURL,
+        reuseExistingServer: !process.env.CI,
+        timeout: 60_000,
+      },
 });
 ```
 
@@ -2123,7 +2370,10 @@ test.afterEach(() => {
 
 for (const id of ["experience", "projects", "skills", "about"]) {
   test(`nav link scrolls to #${id}`, async ({ page }) => {
-    await page.getByRole("navigation", { name: "Sections" }).getByRole("link", { name: new RegExp(id, "i") }).click();
+    await page
+      .getByRole("navigation", { name: "Sections" })
+      .getByRole("link", { name: new RegExp(id, "i") })
+      .click();
     await expect(page).toHaveURL(new RegExp(`#${id}$`));
     await expect(page.locator(`#${id}`)).toBeInViewport();
   });
@@ -2147,14 +2397,27 @@ test("every link is reachable by keyboard with a visible focus ring", async ({ p
       const el = document.activeElement as HTMLElement | null;
       if (!el || el.tagName !== "A") return null;
       const s = getComputedStyle(el);
-      return { key: `${el.getAttribute("href")}|${el.textContent?.trim()}`, outline: s.outlineStyle, width: s.outlineWidth };
+      return {
+        key: `${el.getAttribute("href")}|${el.textContent?.trim()}`,
+        outline: s.outlineStyle,
+        width: s.outlineWidth,
+      };
     });
     if (!info) continue;
     expect(info.outline, info.key).not.toBe("none");
     expect(parseFloat(info.width), info.key).toBeGreaterThanOrEqual(2);
     seen.add(info.key);
   }
-  expect(seen.size).toBe(await page.evaluate(() => new Set([...document.querySelectorAll("a[href]")].map((a) => `${a.getAttribute("href")}|${a.textContent?.trim()}`)).size));
+  expect(seen.size).toBe(
+    await page.evaluate(
+      () =>
+        new Set(
+          [...document.querySelectorAll("a[href]")].map(
+            (a) => `${a.getAttribute("href")}|${a.textContent?.trim()}`,
+          ),
+        ).size,
+    ),
+  );
 });
 
 test("resume downloads as a PDF", async ({ request }) => {
@@ -2167,8 +2430,13 @@ test("resume downloads as a PDF", async ({ request }) => {
 test("contact and profile links are correct", async ({ page }) => {
   await expect(page.locator('a[href="mailto:dominguezdanieldev@gmail.com"]').first()).toBeVisible();
   await expect(page.locator('a[href="https://github.com/danieldominguez8"]').first()).toBeVisible();
-  await expect(page.locator('a[href="https://www.linkedin.com/in/dannyddominguez/"]').first()).toBeVisible();
-  await expect(page.getByRole("link", { name: "App Store" })).toHaveAttribute("href", /apps\.apple\.com/);
+  await expect(
+    page.locator('a[href="https://www.linkedin.com/in/dannyddominguez/"]').first(),
+  ).toBeVisible();
+  await expect(page.getByRole("link", { name: "App Store" })).toHaveAttribute(
+    "href",
+    /apps\.apple\.com/,
+  );
   await expect(page.locator('a[href*="play.google.com"]')).toHaveCount(0);
 });
 ```
@@ -2186,7 +2454,9 @@ for (const width of widths) {
 
     test("no horizontal scroll", async ({ page }) => {
       await page.goto("/");
-      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+      const overflow = await page.evaluate(
+        () => document.documentElement.scrollWidth - window.innerWidth,
+      );
       expect(overflow).toBeLessThanOrEqual(0);
     });
 
@@ -2198,9 +2468,9 @@ for (const width of widths) {
 
     test("project grid columns", async ({ page }) => {
       await page.goto("/");
-      const cols = await page.locator("#projects .grid").evaluate(
-        (el) => getComputedStyle(el).gridTemplateColumns.split(" ").length,
-      );
+      const cols = await page
+        .locator("#projects .grid")
+        .evaluate((el) => getComputedStyle(el).gridTemplateColumns.split(" ").length);
       expect(cols).toBe(width >= 768 ? 2 : 1);
     });
   });
@@ -2238,9 +2508,9 @@ for (const width of [390, 1280]) {
 
 test("palette text colors meet 4.5:1 on the ground color", async () => {
   const lum = (hex: string) => {
-    const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255).map((c) =>
-      c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4,
-    );
+    const [r, g, b] = [1, 3, 5]
+      .map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
+      .map((c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
     return 0.2126 * r + 0.7152 * g + 0.0722 * b;
   };
   const ratio = (a: string, b: string) => {
@@ -2272,12 +2542,14 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 8: Visual regression, 404 page, Lighthouse, and link checks
 
 **Files:**
+
 - Create: `e2e/visual.spec.ts`, `src/pages/404.astro`, `lighthouserc.json`, `scripts/check-external-links.mjs`, `e2e/visual.spec.ts-snapshots/*.png` (generated)
 - Modify: `astro.config.mjs` (sitemap), `package.json`
 
 - [ ] **Step 1: Failing 404 test**
 
 Append to `tests/html/dist.test.ts`:
+
 ```ts
 describe("404 page", () => {
   test("exists, is noindex, and links home", () => {
@@ -2289,6 +2561,7 @@ describe("404 page", () => {
   });
 });
 ```
+
 Run: `npm run build && npm run test:dist` → Expected: FAIL (`dist/404.html` missing).
 
 - [ ] **Step 2: Implement `src/pages/404.astro`**
@@ -2297,18 +2570,33 @@ Run: `npm run build && npm run test:dist` → Expected: FAIL (`dist/404.html` mi
 ---
 import Base from "../layouts/Base.astro";
 ---
-<Base title="Page not found — Danny Dominguez" description="This page doesn't exist. Head back to Danny Dominguez's home page or download the resume.">
+
+<Base
+  title="Page not found — Danny Dominguez"
+  description="This page doesn't exist. Head back to Danny Dominguez's home page or download the resume."
+>
   <meta slot="head" name="robots" content="noindex" />
   <section class="notfound">
     <h1>Page not found</h1>
     <p>The page you're looking for doesn't exist.</p>
-    <p><a href="/">Back to the home page</a> · <a href="/resume.pdf">Download resume</a></p>
+    <p>
+      <a href="/">Back to the home page</a> · <a href="/resume.pdf">Download resume</a>
+    </p>
   </section>
 </Base>
 
 <style>
-  .notfound { padding-block: 96px; display: flex; flex-direction: column; gap: 16px; }
-  h1 { font-family: var(--font-display); font-weight: 400; font-size: 48px; }
+  .notfound {
+    padding-block: 96px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: 48px;
+  }
 </style>
 ```
 
@@ -2321,7 +2609,9 @@ Run: `npm run build && npm run test:dist` → Expected: PASS.
 ```bash
 npm install -D @astrojs/sitemap
 ```
+
 `astro.config.mjs`:
+
 ```js
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
@@ -2333,7 +2623,9 @@ export default defineConfig({
   integrations: [sitemap({ filter: (page) => !page.includes("404") })],
 });
 ```
+
 Add to `tests/html/dist.test.ts`:
+
 ```ts
 test("sitemap lists the home page only", () => {
   const xml = readFileSync("dist/sitemap-0.xml", "utf8");
@@ -2341,15 +2633,20 @@ test("sitemap lists the home page only", () => {
   expect(xml).not.toContain("404");
 });
 ```
+
 Run: `npm run build && npm run test:dist` → PASS.
 
 - [ ] **Step 4: Visual regression spec**
 
 `e2e/visual.spec.ts`:
+
 ```ts
 import { test, expect } from "@playwright/test";
 
-for (const [name, width, height] of [["phone", 390, 844], ["desktop", 1280, 900]] as const) {
+for (const [name, width, height] of [
+  ["phone", 390, 844],
+  ["desktop", 1280, 900],
+] as const) {
   test(`full page matches baseline — ${name}`, async ({ page }) => {
     await page.setViewportSize({ width, height });
     await page.goto("/");
@@ -2366,6 +2663,7 @@ npm run build
 docker run --rm -v "$PWD":/work -v /work/node_modules -w /work mcr.microsoft.com/playwright:v1.63.0-noble \
   bash -lc "npm ci && npx playwright test --project=visual --update-snapshots"
 ```
+
 Expected: two PNGs under `e2e/visual.spec.ts-snapshots/` with `-linux` in the name.
 The anonymous `-v /work/node_modules` volume keeps the container's Linux `node_modules` from overwriting your macOS one. The Playwright `webServer` starts `npm run preview` inside the container, so no port mapping is needed.
 
@@ -2376,10 +2674,15 @@ Open both PNGs next to the canvas (https://claude.ai/artifact/Hep6tziYybVXnz6B8h
 - [ ] **Step 7: Lighthouse CI**
 
 `lighthouserc.json`:
+
 ```json
 {
   "ci": {
-    "collect": { "staticDistDir": "./dist", "numberOfRuns": 3, "autodiscoverUrlBlocklist": ["/404.html"] },
+    "collect": {
+      "staticDistDir": "./dist",
+      "numberOfRuns": 3,
+      "autodiscoverUrlBlocklist": ["/404.html"]
+    },
     "assert": {
       "assertions": {
         "categories:performance": ["error", { "minScore": 0.95 }],
@@ -2393,12 +2696,14 @@ Open both PNGs next to the canvas (https://claude.ai/artifact/Hep6tziYybVXnz6B8h
   }
 }
 ```
+
 Run: `npm run lhci`
 Expected: all assertions pass. If performance < 0.95, first check image sizes in `public/images` (lazy-load, dimensions) before changing budgets.
 
 - [ ] **Step 8: External link report**
 
 `scripts/check-external-links.mjs`:
+
 ```js
 import { LinkChecker } from "linkinator";
 
@@ -2417,6 +2722,7 @@ for (const l of broken) console.log(`BROKEN ${l.status ?? "-"} ${l.url} (on ${l.
 console.log(`${result.links.length} links checked, ${broken.length} broken`);
 process.exitCode = 0; // report-only: external sites are flaky
 ```
+
 (LinkedIn blocks bots with 999, hence the skip.)
 Run: `npm run links:external`
 Expected: `0 broken` (App Store, GitHub links resolve).
@@ -2440,6 +2746,7 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ### Task 9: CI workflow and Amplify build settings
 
 **Files:**
+
 - Create: `.github/workflows/ci.yml`, `amplify.yml`
 
 - [ ] **Step 1: Write `amplify.yml`**
@@ -2558,6 +2865,7 @@ Ask the owner to enable, on GitHub → Settings → Branches → `main`: "Requir
 ### Task 10: Preview deploy, cutover, and production smoke tests
 
 **Files:**
+
 - Create: `e2e/smoke.spec.ts`
 
 - [ ] **Step 1: Write `e2e/smoke.spec.ts`**
@@ -2597,7 +2905,9 @@ test.describe("production-only redirects", () => {
   });
 
   test("old CRA resume URL redirects to /resume.pdf", async ({ request }) => {
-    const res = await request.get("/static/media/danny_dominguez_resume.1cc2f44acd120714c053.pdf", { maxRedirects: 0 });
+    const res = await request.get("/static/media/danny_dominguez_resume.1cc2f44acd120714c053.pdf", {
+      maxRedirects: 0,
+    });
     expect(res.status()).toBe(301);
     expect(res.headers()["location"]).toMatch(/\/resume\.pdf$/);
   });
@@ -2605,6 +2915,7 @@ test.describe("production-only redirects", () => {
 ```
 
 Commit and push:
+
 ```bash
 git add e2e/smoke.spec.ts
 git commit -m "test: deployment smoke tests
@@ -2630,6 +2941,7 @@ Owner opens the preview on a phone and a desktop, compares to the canvas, and ta
 - [ ] **Step 5: Merge to `main` (deploys production — requires the owner's explicit yes)**
 
 Rollback line to show the owner first: "Revert with `git revert -m 1 <merge-commit> && git push`; Amplify rebuilds the old site in ~2 minutes."
+
 ```bash
 git checkout main
 git pull --ff-only
@@ -2638,18 +2950,25 @@ git merge --no-ff redesign -m "Merge redesign: Astro rebuild of dannydominguez.d
 Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 git push origin main
 ```
+
 Wait for the Amplify `main` build; confirm `https://www.dannydominguez.dev` shows the new `<h1>`.
 
 - [ ] **Step 6: Update Amplify rewrite rules (after production shows the new site)**
 
 Amplify → Hosting → Rewrites and redirects → Manage redirects → replace the JSON with:
+
 ```json
 [
-  { "source": "https://dannydominguez.dev", "status": "301", "target": "https://www.dannydominguez.dev" },
+  {
+    "source": "https://dannydominguez.dev",
+    "status": "301",
+    "target": "https://www.dannydominguez.dev"
+  },
   { "source": "</^\\/static\\/media\\/.*\\.pdf$/>", "status": "301", "target": "/resume.pdf" },
   { "source": "/<*>", "status": "404", "target": "/404.html" }
 ]
 ```
+
 Rollback: paste back the previous three rules (302 apex redirect, `/<*>` 404-200 → `/index.html`, and the extension regex 200 → `/index.html`).
 Order matters: this must happen after Step 5, because the old site's resume lives under `/static/media/` and would be redirected to a `/resume.pdf` it does not have.
 
