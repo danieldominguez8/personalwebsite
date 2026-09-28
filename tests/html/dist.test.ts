@@ -80,3 +80,20 @@ describe("404 page", () => {
     expect(xml).not.toContain("404");
   });
 });
+
+describe("links work from every built page", () => {
+  test("every in-page or home-page anchor resolves to an id that exists", () => {
+    const home = readFileSync("dist/index.html", "utf8");
+    const homeIds = [...home.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
+    for (const file of ["dist/index.html", "dist/404.html"]) {
+      const page = readFileSync(file, "utf8");
+      const pageIds = [...page.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]);
+      for (const [, anchor] of page.matchAll(/href="#([^"]+)"/g)) {
+        expect(pageIds, `${file} #${anchor}`).toContain(anchor);
+      }
+      for (const [, anchor] of page.matchAll(/href="\/#([^"]+)"/g)) {
+        expect(homeIds, `${file} /#${anchor}`).toContain(anchor);
+      }
+    }
+  });
+});

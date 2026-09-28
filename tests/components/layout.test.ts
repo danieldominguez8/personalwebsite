@@ -11,10 +11,10 @@ beforeAll(async () => {
 describe("Header", () => {
   test("badge links home and nav points at every section", async () => {
     const html = await container.renderToString(Header);
-    expect(html).toContain('href="#top"');
+    expect(html).toMatch(/<a href="\/" class="brand"/);
     expect(html).toContain(">DD<");
     for (const id of ["experience", "projects", "skills", "about"]) {
-      expect(html).toContain(`href="#${id}"`);
+      expect(html).toContain(`href="/#${id}"`);
     }
     expect(html).toMatch(/<a[^>]*href="\/resume\.pdf"[^>]*>\s*Resume\s*<\/a>/);
     expect(html).toContain('aria-label="Sections"');

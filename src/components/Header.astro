@@ -10,7 +10,7 @@ const sections = [
 
 <header class="site-header">
   <div class="container bar">
-    <a href="#top" class="brand">
+    <a href="/" class="brand">
       <span class="badge" aria-hidden="true">
         DD
       </span>
@@ -20,7 +20,7 @@ const sections = [
       <ul>
         {sections.map((s) => (
           <li class="nav-link">
-            <a href={`#${s.id}`}>{s.label}</a>
+            <a href={`/#${s.id}`}>{s.label}</a>
           </li>
         ))}
         <li>
@@ -85,6 +85,19 @@ const sections = [
   @media (max-width: 767px) {
     .nav-link {
       display: none;
+    }
+  }
+  /* Very narrow phones (e.g. 280px fold cover screens): keep name and Resume on one row. */
+  @media (max-width: 359px) {
+    .bar {
+      gap: 8px;
+    }
+    .brand {
+      gap: 8px;
+      font-size: 14px;
+    }
+    .btn-small {
+      padding: 8px 12px;
     }
   }
 </style>

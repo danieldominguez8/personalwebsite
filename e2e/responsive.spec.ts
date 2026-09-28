@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-const widths = [320, 390, 768, 1024, 1280, 1920];
+const widths = [280, 320, 390, 768, 1024, 1280, 1920];
 
 for (const width of widths) {
   test.describe(`${width}px`, () => {
@@ -16,8 +16,15 @@ for (const width of widths) {
 
     test("header stays one row", async ({ page }) => {
       await page.goto("/");
-      const box = await page.locator(".site-header").boundingBox();
-      expect(box!.height).toBeLessThanOrEqual(65);
+      const header = (await page.locator(".site-header").boundingBox())!;
+      expect(header.height).toBeLessThanOrEqual(65);
+      // The bar has a fixed height, so also check the Resume button stays one line inside it.
+      const button = (await page
+        .getByRole("navigation", { name: "Sections" })
+        .getByRole("link", { name: "Resume" })
+        .boundingBox())!;
+      expect(button.height).toBeLessThanOrEqual(44);
+      expect(button.y + button.height).toBeLessThanOrEqual(header.y + header.height);
     });
 
     test("project grid columns", async ({ page }) => {
