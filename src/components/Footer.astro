@@ -1,0 +1,50 @@
+---
+import { profile } from "../data/profile";
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container bar">
+    <span>
+      © {year} {profile.name}
+    </span>
+    <ul>
+      <li>
+        <a href={profile.github}>GitHub</a>
+      </li>
+      <li>
+        <a href={profile.linkedin}>LinkedIn</a>
+      </li>
+      <li>
+        <a href={profile.resume}>Resume</a>
+      </li>
+    </ul>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--surface);
+    border-top: 1px solid var(--rule);
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .bar {
+    min-height: 64px;
+    padding-block: 18px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 24px;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 24px;
+  }
+  a {
+    color: var(--muted);
+  }
+</style>

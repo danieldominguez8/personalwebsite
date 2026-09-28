@@ -1,0 +1,90 @@
+---
+import { profile } from "../data/profile";
+const sections = [
+  { id: "experience", label: "Experience" },
+  { id: "projects", label: "Projects" },
+  { id: "skills", label: "Skills" },
+  { id: "about", label: "About" },
+];
+---
+
+<header class="site-header">
+  <div class="container bar">
+    <a href="#top" class="brand">
+      <span class="badge" aria-hidden="true">
+        DD
+      </span>
+      <span>{profile.name}</span>
+    </a>
+    <nav aria-label="Sections">
+      <ul>
+        {sections.map((s) => (
+          <li class="nav-link">
+            <a href={`#${s.id}`}>{s.label}</a>
+          </li>
+        ))}
+        <li>
+          <a class="btn btn-small" href={profile.resume}>
+            Resume
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: var(--surface);
+    border-bottom: 1px solid var(--rule);
+  }
+  .bar {
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .badge {
+    background: var(--accent);
+    color: #ffffff;
+    border-radius: 7px;
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    font-size: 15px;
+  }
+  .nav-link a {
+    color: var(--secondary);
+    text-decoration: none;
+  }
+  .btn-small {
+    padding: 8px 16px;
+  }
+  @media (max-width: 767px) {
+    .nav-link {
+      display: none;
+    }
+  }
+</style>
