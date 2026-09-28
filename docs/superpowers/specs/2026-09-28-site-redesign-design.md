@@ -1,7 +1,7 @@
 # dannydominguez.dev redesign — design spec
 
 Date: 2026-09-28 · Status: approved design, awaiting spec review
-Visual source of truth: Claude Design canvas https://claude.ai/artifact/Hep6tziYybVXnz6B8hwD6c (version 10, desktop 1280px + phone 390px artboards)
+Visual source of truth: Claude Design canvas https://claude.ai/artifact/Hep6tziYybVXnz6B8hwD6c (version 11, desktop 1280px + phone 390px artboards)
 
 ## Goal
 
@@ -10,7 +10,7 @@ A recruiter should get name, current role, strongest work, and the resume within
 
 Success criteria:
 - Everything on the canvas ships, with the same content, order, and look on desktop and phone.
-- Lighthouse on the production URL: Performance ≥ 95, Accessibility = 100, SEO = 100.
+- Every automated suite in the Testing section passes in CI, including Lighthouse (Performance ≥ 95, Accessibility = 100, SEO = 100) and zero axe violations.
 - No horizontal scroll from 320px to 1920px wide.
 - The live site stays up the whole time; the swap to the new site is one merge that can be reverted.
 
@@ -35,7 +35,7 @@ Success criteria:
 3. **Experience** (`#experience`): one "Invoice Cloud · Aug 2022 – Present" heading with two sub-roles (SE II Dec 2024 – Present, 4 bullets; SE I Aug 2022 – Nov 2024, 4 bullets incl. the Visual Basic/C# legacy refactor), then an Education row: Drexel University, M.S. Software Engineering, 2020 – 2022.
 4. **Selected projects** (`#projects`):
    - Two image cards: **Lotería Tradicional** (figure "30,000+ downloads"; Personal project · 2020 – Present; React Native original rewritten natively in SwiftUI and Kotlin with custom voice profiles; App Store link only) and **FreeTogether** (Personal project · 2026; iOS group-availability app; SwiftUI · Firebase · Cloud Functions; no link).
-   - Two compact text rows: **Rally Competitions** (Founder · 2026; Next.js · Expo / React Native · FastAPI · PostgreSQL · Docker · GitLab CI/CD; no link) and **Conversational Agent** (M.S. capstone, Drexel · 2021 – 2022; GitHub link).
+   - Three compact text rows, in order: **Rally Competitions** (Founder · 2026; Next.js · Expo / React Native · FastAPI · PostgreSQL · Docker · GitLab CI/CD; no link), **dannydominguez.dev** (Personal project · 2022 – Present; Astro · AWS Amplify · Route 53 · Playwright; "This site: a static Astro build with automated accessibility, visual, and performance checks, deployed on AWS Amplify."; GitHub link), and **Conversational Agent** (M.S. capstone, Drexel · 2021 – 2022; GitHub link).
 5. **Skills** (`#skills`): definition list in this order — Backend & APIs, Payments, Languages (incl. Visual Basic), AI & automation, Cloud & delivery, Databases, Testing.
 6. **About** (`#about`): large photo + two short paragraphs (McAllen; coding as a hobby; travel, staying active, family, friends, dog Todd).
 7. **Contact** (`#contact`): serif "Let's talk.", "I'm open to new roles, and happy to hear about freelance projects.", email link.
@@ -79,10 +79,26 @@ Rule: components render data; editing a job, project, or skill is a change to on
 
 ## Testing
 
-- `npm run build` must pass with zero warnings.
-- A `node:test` smoke test over `dist/index.html`: every section id exists, nav anchors resolve, every `<img>` has alt text, resume/GitHub/LinkedIn/mailto links present, no `[PLACEHOLDER]` text.
-- Link check over external links (App Store, GitHub, LinkedIn) in CI-free local script; report, do not fail on network errors.
-- Manual: preview URL at 390px and 1280px compared against the canvas; Lighthouse run on the preview.
+Testing is a first-class part of this site (it is also listed as a project), so every layer has an automated gate.
+All suites run locally with one command (`npm run test:all`) and in GitHub Actions on every push and pull request; a red suite blocks merging `redesign` into `main`.
+
+| Layer | Tool | What it proves |
+|---|---|---|
+| Static checks | `astro check` (TypeScript), ESLint, Prettier `--check` | Types, lint, formatting are clean; zero warnings |
+| Content data | Vitest + Zod schemas over `src/data/*` | Every job/project/skill entry has required fields, valid date ranges (start ≤ end, "Present" only on current items), well-formed URLs, no `[PLACEHOLDER]` text, images exist on disk with alt text |
+| Components | Vitest + Astro Container API | Each section renders its data: counts of jobs, bullets, projects, skill groups; conditional bits (link only when a URL exists, figure only when set) |
+| Built HTML | Vitest over `dist/` + `html-validate` | Valid HTML; one `<h1>`; heading levels never skip; unique ids; every nav anchor resolves; meta description, canonical, Open Graph tags present; no inline `javascript:` URLs |
+| End-to-end | Playwright (Chromium, WebKit, Firefox) | Nav links scroll to their sections; skip link moves focus to `<main>`; keyboard Tab order reaches every link with a visible focus ring; `/resume.pdf` returns 200 `application/pdf`; mailto/GitHub/LinkedIn/App Store hrefs correct; no console errors |
+| Responsive | Playwright at 320, 390, 768, 1024, 1280, 1920px | No horizontal scroll; header never wraps; project grid is 2 columns ≥ 768px and 1 column below |
+| Accessibility | `@axe-core/playwright` on every viewport | Zero axe violations (WCAG 2.2 AA); plus a contrast assertion on the palette tokens |
+| Visual regression | Playwright `toHaveScreenshot` at 390px and 1280px | Pixel diffs against committed baselines; baselines are reviewed against the canvas once, then any change needs an explicit baseline update |
+| Performance/SEO | Lighthouse CI (`@lhci/cli`) on the built site | Performance ≥ 95, Accessibility = 100, Best Practices ≥ 95, SEO = 100; page weight budget ≤ 500 KB for first load |
+| Links | `linkinator` over `dist/` | Internal links never broken (fails the build); external links reported, retried, allowed to be flaky |
+| Deployment smoke | Playwright against the Amplify preview URL, then production after merge | Same critical-path checks against the real host: 200 on `/`, resume PDF served as PDF, apex → www redirect is 301, old `/static/media/*.pdf` resume URL redirects to `/resume.pdf`, 404 page served for unknown paths |
+
+Development rule: new sections and data changes are written test-first (the data schema and component test fail before the content or component exists).
+
+Manual gate before merging to `main`: compare the preview at 390px and 1280px against the canvas, and click the resume link on a real phone.
 
 ## Out of scope / follow-ups
 
