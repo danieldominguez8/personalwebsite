@@ -1,0 +1,76 @@
+---
+import type { Project } from "../data/schema";
+import { formatRange } from "../lib/dates";
+interface Props {
+  project: Project;
+}
+const { project: p } = Astro.props;
+---
+
+<article class="row">
+  <div class="text">
+    <h3>{p.name}</h3>
+    <p class="muted small">
+      {p.role} · {formatRange(p.start, p.end)}
+    </p>
+    <p class="desc">{p.description}</p>
+    <p class="muted small">{p.stack.join(" · ")}</p>
+  </div>
+  {p.links.length > 0 && (
+    <ul class="links">
+      {p.links.map((l) => (
+        <li>
+          <a href={l.url} rel="noopener">
+            {l.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  )}
+</article>
+
+<style>
+  .row {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 20px 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px 24px;
+  }
+  .text {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  h3 {
+    font-size: 18px;
+    font-weight: 600;
+  }
+  .small {
+    font-size: 14px;
+  }
+  .desc {
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: var(--secondary);
+  }
+  .links {
+    list-style: none;
+    padding: 0;
+    flex-shrink: 0;
+    font-size: 15px;
+  }
+  .links a {
+    color: var(--accent);
+  }
+  @media (max-width: 767px) {
+    .row {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 18px;
+    }
+  }
+</style>

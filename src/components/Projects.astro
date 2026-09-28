@@ -1,0 +1,41 @@
+---
+import { projects } from "../data/projects";
+import ProjectCard from "./ProjectCard.astro";
+import ProjectRow from "./ProjectRow.astro";
+const cards = projects.filter((p) => p.layout === "card");
+const rows = projects.filter((p) => p.layout === "row");
+---
+
+<section id="projects" class="section" aria-labelledby="projects-title">
+  <h2 id="projects-title" class="section-title">
+    Selected projects
+  </h2>
+  <div class="grid">
+    {cards.map((p) => (
+      <ProjectCard project={p} />
+    ))}
+  </div>
+  <div class="rows">
+    {rows.map((p) => (
+      <ProjectRow project={p} />
+    ))}
+  </div>
+</section>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+  .rows {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  @media (max-width: 767px) {
+    .grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>
