@@ -64,3 +64,19 @@ describe("built index.html", () => {
     expect(html).not.toContain("/static/media/");
   });
 });
+
+describe("404 page", () => {
+  test("exists, is noindex, and links home", () => {
+    const page = readFileSync("dist/404.html", "utf8");
+    expect(page).toContain('<meta name="robots" content="noindex"');
+    expect(page).toMatch(/<h1[^>]*>Page not found<\/h1>/);
+    expect(page).toContain('href="/"');
+    expect(page).toContain('href="/resume.pdf"');
+  });
+
+  test("sitemap lists the home page only", () => {
+    const xml = readFileSync("dist/sitemap-0.xml", "utf8");
+    expect(xml).toContain("<loc>https://www.dannydominguez.dev/</loc>");
+    expect(xml).not.toContain("404");
+  });
+});

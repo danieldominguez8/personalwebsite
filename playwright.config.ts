@@ -21,7 +21,7 @@ export default defineConfig({
   webServer: external
     ? undefined
     : {
-        command: "npm run preview",
+        command: "npx astro preview --port 4321 --ignore-lock",
         url: baseURL,
         reuseExistingServer: !process.env.CI,
         timeout: 60_000,

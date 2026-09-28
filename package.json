@@ -21,7 +21,8 @@
     "links:external": "node scripts/check-external-links.mjs",
     "lhci": "lhci autorun",
     "test:all": "npm run check && npm run lint && npm run format:check && npm test && npm run build && npm run test:dist && npm run validate:html && npm run links && npm run test:e2e && npm run lhci",
-    "test:dist": "WITH_DIST=1 vitest run tests/html"
+    "test:dist": "WITH_DIST=1 vitest run tests/html",
+    "test:visual:docker": "docker run --rm -v \"$PWD\":/work -v /work/node_modules -w /work mcr.microsoft.com/playwright:v1.63.0-noble bash -lc \"npm ci --no-audit --no-fund && npx playwright test --project=visual\""
   },
   "dependencies": {
     "@fontsource-variable/newsreader": "^5.3.0",
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "@astrojs/sitemap": "^3.7.4",
     "@axe-core/playwright": "^4.13.0",
     "@lhci/cli": "^0.15.1",
     "@playwright/test": "^1.63.0",

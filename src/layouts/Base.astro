@@ -34,6 +34,7 @@ const ogImage = new URL("/images/headshot.jpg", Astro.site).href;
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary" />
+    <slot name="head" />
   </head>
   <body id="top">
     <a class="skip-link" href="#main">
