@@ -1,0 +1,45 @@
+---
+import { profile } from "../data/profile";
+---
+
+<section id="contact" class="section contact" aria-labelledby="contact-title">
+  <h2 id="contact-title" class="title">
+    Let's talk.
+  </h2>
+  <p>{profile.contactNote}</p>
+  <a class="email" href={`mailto:${profile.email}`}>
+    {profile.email}
+  </a>
+</section>
+
+<style>
+  .contact {
+    gap: 16px;
+    padding-bottom: 96px;
+  }
+  .title {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(32px, 5vw, 40px);
+    line-height: 1.1;
+  }
+  p {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--body);
+  }
+  .email {
+    font-size: 19px;
+    font-weight: 500;
+    text-underline-offset: 5px;
+    align-self: flex-start;
+  }
+  @media (max-width: 767px) {
+    .contact {
+      padding-bottom: 64px;
+    }
+    .email {
+      font-size: 17px;
+    }
+  }
+</style>

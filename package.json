@@ -17,10 +17,11 @@
     "test:e2e": "playwright test --project=chromium --project=firefox --project=webkit",
     "test:visual": "playwright test --project=visual",
     "validate:html": "html-validate \"dist/**/*.html\"",
-    "links": "linkinator dist --recurse --skip \"^https?://(?!localhost)\"",
+    "links": "node scripts/check-internal-links.mjs",
     "links:external": "node scripts/check-external-links.mjs",
     "lhci": "lhci autorun",
-    "test:all": "npm run check && npm run lint && npm run format:check && npm test && npm run build && npm run validate:html && npm run links && npm run test:e2e && npm run lhci"
+    "test:all": "npm run check && npm run lint && npm run format:check && npm test && npm run build && npm run test:dist && npm run validate:html && npm run links && npm run test:e2e && npm run lhci",
+    "test:dist": "WITH_DIST=1 vitest run tests/html"
   },
   "dependencies": {
     "@fontsource-variable/newsreader": "^5.3.0",
