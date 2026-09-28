@@ -1,8 +1,8 @@
 import Chip from "@mui/material/Chip";
 import Card from '@mui/material/Card';
-import danny_dominguez_dev from './images/danny_dominguez_dev.png'
-import loteria_ios from './images/loteria_ios.png'
-import loteria_android from './images/loteria_android.png'
+import danny_dominguez_dev from './images/danny_dominguez_dev.jpg'
+import loteria_ios from './images/loteria_ios.jpg'
+import loteria_android from './images/loteria_android.jpg'
 import conversational_agent from './images/conversational_agent.png'
 
 
@@ -40,15 +40,15 @@ const projects = [
 let projectsList = [];
 projects.forEach((project, index) => {
     projectsList.push(
-        <Card className="cards" >
+        <Card className="cards" key={project.name}>
             <h2 className="project-name">{project.name}</h2>
             <p className="project-company">{project.company}</p>
-            <a href={project.website} target="_blank" rel="noreferrer"><img class="project-img" alt={project.name} src={project.image} /></a>
-            <p className="project-tags-container">{project.tags.map((val, index) => {
+            <a href={project.website} target="_blank" rel="noreferrer"><img className="project-img" alt={project.name} src={project.image} /></a>
+            <div className="project-tags-container">{project.tags.map((val, index) => {
                 return (
                     <Chip className="chips" key={index} label={val} />
                 );
-            })}</p>
+            })}</div>
         </Card>
     )
 })

@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import danny from './assets/images/danny.png';
+import danny from './assets/images/danny.jpg';
 import resume from "./assets/files/danny_dominguez_resume.pdf";
 import { skillList, projectList } from './assets/helpers';
 
@@ -9,7 +9,7 @@ function App() {
     <div className="body-container">
       <div className="split-section">
         <div className="picture-container">
-          <img className="biography-picture" alt="danny" src={danny} />
+          <img className="biography-picture" alt="Danny Dominguez at the Hoover Dam" src={danny} />
         </div>
         <div className="about-me-container">
           <h1 className="main-header">Hello, I'm Danny Dominguez</h1>
@@ -63,7 +63,7 @@ function App() {
       <div className="help-container">
         <h1 className="biography-header">Have a Project? Let's Build it.</h1>
         <p className="about-me-text">
-          Feel free to reach out if you in need a developer or have any questions.
+          Feel free to reach out if you need a developer or have any questions.
           Website? Web app? Mobile App? Trying to fill a full-time position? Email me at <a href="mailto:dominguezdanieldev@gmail.com"> dominguezdanieldev@gmail.com</a></p>
       </div>
 
