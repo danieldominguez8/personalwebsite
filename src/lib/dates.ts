@@ -1,7 +1,7 @@
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 export const DATE_PATTERN = /^\d{4}(-(0[1-9]|1[0-2]))?$/;
 
-function formatOne(value: string): string {
+export function formatDate(value: string): string {
   if (value === "present") return "Present";
   if (!DATE_PATTERN.test(value)) throw new Error(`Invalid date: ${value}`);
   const [year, month] = value.split("-");
@@ -10,8 +10,8 @@ function formatOne(value: string): string {
 
 export function formatRange(start: string, end?: string): string {
   if (start === "present") throw new Error("Invalid date: start cannot be present");
-  const from = formatOne(start);
-  return end === undefined ? from : `${from} – ${formatOne(end)}`;
+  const from = formatDate(start);
+  return end === undefined ? from : `${from} – ${formatDate(end)}`;
 }
 
 /** Sortable key: "present" sorts after everything. */

@@ -1,0 +1,9 @@
+[
+  {
+    "source": "https://dannydominguez.dev",
+    "status": "301",
+    "target": "https://www.dannydominguez.dev"
+  },
+  { "source": "</^\\/static\\/media\\/.*\\.pdf$/>", "status": "301", "target": "/resume.pdf" },
+  { "source": "/<*>", "status": "404-200", "target": "/404.html" }
+]
