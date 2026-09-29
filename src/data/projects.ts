@@ -38,7 +38,9 @@ export const projects = projectsSchema.parse([
       height: 1400,
     },
     layout: "card",
-    links: [],
+    links: [
+      { label: "App Store", url: "https://apps.apple.com/us/app/free-together/id6760777597" },
+    ],
   },
   {
     name: "Rally Competitions",
@@ -48,7 +50,7 @@ export const projects = projectsSchema.parse([
       "A platform for functional-fitness competitions: public event pages and organizer tools on the web, a mobile app for athletes and spectators, and one typed API behind both.",
     stack: ["Next.js", "Expo / React Native", "FastAPI", "PostgreSQL", "Docker", "GitLab CI/CD"],
     layout: "row",
-    links: [],
+    links: [{ label: "Website", url: "https://www.rallycompetitions.com" }],
   },
   {
     name: "dannydominguez.dev",
@@ -59,7 +61,10 @@ export const projects = projectsSchema.parse([
       "This site: a static Astro build with automated accessibility, visual, and performance checks, deployed on AWS Amplify.",
     stack: ["Astro", "AWS Amplify", "Route 53", "Playwright"],
     layout: "row",
-    links: [{ label: "GitHub", url: "https://github.com/danieldominguez8/personalwebsite" }],
+    links: [
+      { label: "Website", url: "https://www.dannydominguez.dev" },
+      { label: "GitHub", url: "https://github.com/danieldominguez8/personalwebsite" },
+    ],
   },
   {
     name: "Conversational Agent",
@@ -69,6 +74,12 @@ export const projects = projectsSchema.parse([
     description:
       "A chatbot that lets students talk with historical role models, trained on first-person narratives from a custom web scraper.",
     stack: ["React Native", "Dialogflow", "Firebase", "Python"],
+    image: {
+      src: "/images/conversational-agent.png",
+      alt: "Role Model Chatbot sign-in and home screens",
+      width: 458,
+      height: 334,
+    },
     layout: "row",
     links: [
       {

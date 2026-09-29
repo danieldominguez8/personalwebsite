@@ -61,15 +61,31 @@ describe("content data", () => {
       "Lotería Tradicional",
       "FreeTogether",
     ]);
-    expect(projects.every((p) => (p.layout === "card") === Boolean(p.image))).toBe(true);
+    expect(projects.filter((p) => p.layout === "card").every((p) => p.image)).toBe(true);
   });
 
-  test("deliberately link-free projects stay link-free", () => {
-    const byName = Object.fromEntries(projects.map((p) => [p.name, p]));
-    expect(byName["FreeTogether"].links).toEqual([]);
-    expect(byName["Rally Competitions"].links).toEqual([]);
-    expect(byName["Lotería Tradicional"].links.map((l) => l.label)).toEqual(["App Store"]);
-    expect(JSON.stringify(projects)).not.toMatch(/play\.google\.com|rallycompetitions\.com/);
+  test("project links match what the owner asked for", () => {
+    const links = Object.fromEntries(
+      projects.map((p) => [p.name, p.links.map((l) => `${l.label} ${l.url}`)]),
+    );
+    expect(links["Lotería Tradicional"]).toEqual([
+      "App Store https://apps.apple.com/us/app/loter%C3%ADa-tradicional/id1612279702",
+    ]);
+    expect(links["FreeTogether"]).toEqual([
+      "App Store https://apps.apple.com/us/app/free-together/id6760777597",
+    ]);
+    expect(links["Rally Competitions"]).toEqual(["Website https://www.rallycompetitions.com"]);
+    expect(links["dannydominguez.dev"]).toEqual([
+      "Website https://www.dannydominguez.dev",
+      "GitHub https://github.com/danieldominguez8/personalwebsite",
+    ]);
+    expect(JSON.stringify(projects)).not.toMatch(/play\.google\.com/);
+  });
+
+  test("the capstone keeps its original screenshot", () => {
+    const agent = projects.find((p) => p.name === "Conversational Agent")!;
+    expect(agent.image?.src).toBe("/images/conversational-agent.png");
+    expect(agent.layout).toBe("row");
   });
 
   test("key copy matches the approved canvas", () => {

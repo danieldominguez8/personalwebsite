@@ -8,6 +8,17 @@ const { project: p } = Astro.props;
 ---
 
 <article class="row">
+  {p.image && (
+    <img
+      class="thumb"
+      src={p.image.src}
+      alt={p.image.alt}
+      width={p.image.width}
+      height={p.image.height}
+      loading="lazy"
+      decoding="async"
+    />
+  )}
   <div class="text">
     <h3>{p.name}</h3>
     <p class="muted small">
@@ -40,10 +51,20 @@ const { project: p } = Astro.props;
     align-items: center;
     gap: 12px 24px;
   }
+  .thumb {
+    width: 150px;
+    height: 110px;
+    object-fit: cover;
+    object-position: top;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
   .text {
     display: flex;
     flex-direction: column;
     gap: 6px;
+    flex: 1;
   }
   h3 {
     font-size: 18px;
@@ -71,6 +92,10 @@ const { project: p } = Astro.props;
       flex-direction: column;
       align-items: flex-start;
       padding: 18px;
+    }
+    .thumb {
+      width: 100%;
+      height: 180px;
     }
   }
 </style>
