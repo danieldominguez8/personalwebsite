@@ -15,6 +15,7 @@ describe("Projects section", () => {
   test("renders every project once, cards before rows", async () => {
     const html = await container.renderToString(Projects);
     expect(html).toContain('id="projects"');
+    expect(html).toMatch(/<h2[^>]*>Personal Projects<\/h2>/);
     const order = projects.map((p) => html.indexOf(`>${p.name}<`));
     expect(order.every((i) => i > -1)).toBe(true);
     expect(order).toEqual([...order].sort((a, b) => a - b));
@@ -34,30 +35,39 @@ describe("ProjectCard", () => {
     expect(html).toContain(">App Store<");
   });
 
-  test("omits figure and link list when absent", async () => {
+  test("omits the figure when absent", async () => {
     const html = await container.renderToString(ProjectCard, {
       props: { project: byName("FreeTogether") },
     });
     expect(html).not.toContain('class="figure"');
-    expect(html).not.toContain('class="links"');
+    expect(html).toContain('href="https://apps.apple.com/us/app/free-together/id6760777597"');
     expect(html).toContain("Personal project · 2026");
   });
 });
 
 describe("ProjectRow", () => {
-  test("renders text-only project with optional link", async () => {
+  test("renders text-only projects with their links", async () => {
     const withLink = await container.renderToString(ProjectRow, {
       props: { project: byName("dannydominguez.dev") },
     });
     expect(withLink).toContain("Personal project · 2022 – Present");
     expect(withLink).toContain('href="https://github.com/danieldominguez8/personalwebsite"');
     expect(withLink).not.toContain("<img");
+    expect(withLink).toContain('href="https://www.dannydominguez.dev"');
 
-    const noLink = await container.renderToString(ProjectRow, {
+    const rally = await container.renderToString(ProjectRow, {
       props: { project: byName("Rally Competitions") },
     });
-    expect(noLink).toContain("Founder · 2026");
-    expect(noLink).not.toContain("<a ");
+    expect(rally).toContain("Founder · 2026");
+    expect(rally).toContain('href="https://www.rallycompetitions.com"');
+  });
+
+  test("row shows an optional thumbnail when the project has an image", async () => {
+    const html = await container.renderToString(ProjectRow, {
+      props: { project: byName("Conversational Agent") },
+    });
+    expect(html).toMatch(/<img[^>]*src="\/images\/conversational-agent\.png"[^>]*loading="lazy"/);
+    expect(html).toContain('alt="Role Model Chatbot sign-in and home screens"');
   });
 
   test("external links carry rel=noopener", async () => {
