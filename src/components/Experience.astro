@@ -1,0 +1,108 @@
+---
+import { companies, education } from "../data/experience";
+import { formatRange } from "../lib/dates";
+---
+
+<section id="experience" class="section" aria-labelledby="experience-title">
+  <h2 id="experience-title" class="section-title">
+    Experience
+  </h2>
+  {companies.map((c) => (
+    <div class="company">
+      <div class="row">
+        <h3 class="org">{c.company}</h3>
+        <span class="muted when">
+          <time datetime={c.start}>{formatRange(c.start, c.end)}</time>
+        </span>
+      </div>
+      {c.roles.map((r) => (
+        <div class="role">
+          <div class="row">
+            <h4>{r.title}</h4>
+            <span class="muted when">
+              <time datetime={r.start}>{formatRange(r.start, r.end)}</time>
+            </span>
+          </div>
+          <ul>
+            {r.bullets.map((b) => (
+              <li>{b}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  ))}
+  {education.map((e) => (
+    <div class="education row">
+      <div>
+        <h3 class="org">{e.school}</h3>
+        <p>{e.degree}</p>
+      </div>
+      <span class="muted when">
+        <time datetime={e.start}>{formatRange(e.start, e.end)}</time>
+      </span>
+    </div>
+  ))}
+</section>
+
+<style>
+  .company {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 4px 16px;
+  }
+  .org {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 24px;
+  }
+  .when {
+    font-size: 15px;
+  }
+  .role {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-left: 20px;
+    border-left: 2px solid var(--rule);
+  }
+  h4 {
+    font-size: 17px;
+    font-weight: 600;
+  }
+  ul {
+    padding-left: 20px;
+    font-size: 16.5px;
+    line-height: 1.7;
+    color: var(--body);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .education {
+    border-top: 1px solid var(--rule);
+    padding-top: 24px;
+  }
+  .education p {
+    color: var(--body);
+  }
+  @media (max-width: 767px) {
+    .org {
+      font-size: 22px;
+    }
+    .role {
+      padding-left: 14px;
+    }
+    ul {
+      font-size: 16px;
+      padding-left: 18px;
+    }
+  }
+</style>

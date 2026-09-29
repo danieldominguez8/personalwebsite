@@ -9,6 +9,7 @@ Rebuild the site from scratch as a job-first professional profile that also sign
 A recruiter should get name, current role, strongest work, and the resume within about ten seconds.
 
 Success criteria:
+
 - Everything on the canvas ships, with the same content, order, and look on desktop and phone.
 - Every automated suite in the Testing section passes in CI, including Lighthouse (Performance ≥ 95, Accessibility = 100, SEO = 100) and zero axe violations.
 - No horizontal scroll from 320px to 1920px wide.
@@ -16,14 +17,14 @@ Success criteria:
 
 ## Decisions already made
 
-| Topic | Decision |
-|---|---|
-| Audience | Both, job-first |
-| Look | "Editorial": off-white `#FAFAF7`, serif display, text-first, generous whitespace |
-| Header | White strip from option C: navy `DD` badge + name left, nav + solid Resume button right, 1px bottom rule |
-| Stack | Astro 7 (current `astro` on npm: 7.3.5), static output, no client JS framework |
-| Photo | Small round headshot in the hero; larger photo in About |
-| Links | GitHub, LinkedIn, email, resume download |
+| Topic    | Decision                                                                                                 |
+| -------- | -------------------------------------------------------------------------------------------------------- |
+| Audience | Both, job-first                                                                                          |
+| Look     | "Editorial": off-white `#FAFAF7`, serif display, text-first, generous whitespace                         |
+| Header   | White strip from option C: navy `DD` badge + name left, nav + solid Resume button right, 1px bottom rule |
+| Stack    | Astro 7 (current `astro` on npm: 7.3.5), static output, no client JS framework                           |
+| Photo    | Small round headshot in the hero; larger photo in About                                                  |
+| Links    | GitHub, LinkedIn, email, resume download                                                                 |
 
 ## Page structure (one page, top to bottom)
 
@@ -82,19 +83,19 @@ Rule: components render data; editing a job, project, or skill is a change to on
 Testing is a first-class part of this site (it is also listed as a project), so every layer has an automated gate.
 All suites run locally with one command (`npm run test:all`) and in GitHub Actions on every push and pull request; a red suite blocks merging `redesign` into `main`.
 
-| Layer | Tool | What it proves |
-|---|---|---|
-| Static checks | `astro check` (TypeScript), ESLint, Prettier `--check` | Types, lint, formatting are clean; zero warnings |
-| Content data | Vitest + Zod schemas over `src/data/*` | Every job/project/skill entry has required fields, valid date ranges (start ≤ end, "Present" only on current items), well-formed URLs, no `[PLACEHOLDER]` text, images exist on disk with alt text |
-| Components | Vitest + Astro Container API | Each section renders its data: counts of jobs, bullets, projects, skill groups; conditional bits (link only when a URL exists, figure only when set) |
-| Built HTML | Vitest over `dist/` + `html-validate` | Valid HTML; one `<h1>`; heading levels never skip; unique ids; every nav anchor resolves; meta description, canonical, Open Graph tags present; no inline `javascript:` URLs |
-| End-to-end | Playwright (Chromium, WebKit, Firefox) | Nav links scroll to their sections; skip link moves focus to `<main>`; keyboard Tab order reaches every link with a visible focus ring; `/resume.pdf` returns 200 `application/pdf`; mailto/GitHub/LinkedIn/App Store hrefs correct; no console errors |
-| Responsive | Playwright at 320, 390, 768, 1024, 1280, 1920px | No horizontal scroll; header never wraps; project grid is 2 columns ≥ 768px and 1 column below |
-| Accessibility | `@axe-core/playwright` on every viewport | Zero axe violations (WCAG 2.2 AA); plus a contrast assertion on the palette tokens |
-| Visual regression | Playwright `toHaveScreenshot` at 390px and 1280px | Pixel diffs against committed baselines; baselines are reviewed against the canvas once, then any change needs an explicit baseline update |
-| Performance/SEO | Lighthouse CI (`@lhci/cli`) on the built site | Performance ≥ 95, Accessibility = 100, Best Practices ≥ 95, SEO = 100; page weight budget ≤ 500 KB for first load |
-| Links | `linkinator` over `dist/` | Internal links never broken (fails the build); external links reported, retried, allowed to be flaky |
-| Deployment smoke | Playwright against the Amplify preview URL, then production after merge | Same critical-path checks against the real host: 200 on `/`, resume PDF served as PDF, apex → www redirect is 301, old `/static/media/*.pdf` resume URL redirects to `/resume.pdf`, 404 page served for unknown paths |
+| Layer             | Tool                                                                    | What it proves                                                                                                                                                                                                                                         |
+| ----------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Static checks     | `astro check` (TypeScript), ESLint, Prettier `--check`                  | Types, lint, formatting are clean; zero warnings                                                                                                                                                                                                       |
+| Content data      | Vitest + Zod schemas over `src/data/*`                                  | Every job/project/skill entry has required fields, valid date ranges (start ≤ end, "Present" only on current items), well-formed URLs, no `[PLACEHOLDER]` text, images exist on disk with alt text                                                     |
+| Components        | Vitest + Astro Container API                                            | Each section renders its data: counts of jobs, bullets, projects, skill groups; conditional bits (link only when a URL exists, figure only when set)                                                                                                   |
+| Built HTML        | Vitest over `dist/` + `html-validate`                                   | Valid HTML; one `<h1>`; heading levels never skip; unique ids; every nav anchor resolves; meta description, canonical, Open Graph tags present; no inline `javascript:` URLs                                                                           |
+| End-to-end        | Playwright (Chromium, WebKit, Firefox)                                  | Nav links scroll to their sections; skip link moves focus to `<main>`; keyboard Tab order reaches every link with a visible focus ring; `/resume.pdf` returns 200 `application/pdf`; mailto/GitHub/LinkedIn/App Store hrefs correct; no console errors |
+| Responsive        | Playwright at 320, 390, 768, 1024, 1280, 1920px                         | No horizontal scroll; header never wraps; project grid is 2 columns ≥ 768px and 1 column below                                                                                                                                                         |
+| Accessibility     | `@axe-core/playwright` on every viewport                                | Zero axe violations (WCAG 2.2 AA); plus a contrast assertion on the palette tokens                                                                                                                                                                     |
+| Visual regression | Playwright `toHaveScreenshot` at 390px and 1280px                       | Pixel diffs against committed baselines; baselines are reviewed against the canvas once, then any change needs an explicit baseline update                                                                                                             |
+| Performance/SEO   | Lighthouse CI (`@lhci/cli`) on the built site                           | Performance ≥ 95, Accessibility = 100, Best Practices ≥ 95, SEO = 100; page weight budget ≤ 500 KB for first load                                                                                                                                      |
+| Links             | `linkinator` over `dist/`                                               | Internal links never broken (fails the build); external links reported, retried, allowed to be flaky                                                                                                                                                   |
+| Deployment smoke  | Playwright against the Amplify preview URL, then production after merge | Same critical-path checks against the real host: 200 on `/`, resume PDF served as PDF, apex → www redirect is 301, old `/static/media/*.pdf` resume URL redirects to `/resume.pdf`, 404 page served for unknown paths                                  |
 
 Development rule: new sections and data changes are written test-first (the data schema and component test fail before the content or component exists).
 

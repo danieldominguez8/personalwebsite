@@ -1,0 +1,69 @@
+---
+import { profile } from "../data/profile";
+---
+
+<section id="about" class="section about" aria-labelledby="about-title">
+  <h2 id="about-title" class="section-title heading">
+    About
+  </h2>
+  <img
+    src={profile.photo.src}
+    alt={profile.photo.alt}
+    width={profile.photo.width}
+    height={profile.photo.height}
+    loading="lazy"
+    decoding="async"
+  />
+  <div class="text">
+    {profile.about.map((p) => (
+      <p>{p}</p>
+    ))}
+  </div>
+</section>
+
+<style>
+  .about {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    grid-template-areas: "img heading" "img text";
+    grid-template-rows: auto 1fr;
+    column-gap: 40px;
+    row-gap: 16px;
+  }
+  .heading {
+    grid-area: heading;
+  }
+  img {
+    grid-area: img;
+    width: 240px;
+    height: 300px;
+    object-fit: cover;
+    object-position: center 30%;
+    border-radius: 12px;
+  }
+  .text {
+    grid-area: text;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  p {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--body);
+  }
+  @media (max-width: 767px) {
+    .about {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: "heading" "img" "text";
+      row-gap: 18px;
+    }
+    img {
+      width: 100%;
+      height: 300px;
+    }
+    p {
+      font-size: 16px;
+    }
+  }
+</style>

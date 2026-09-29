@@ -1,0 +1,46 @@
+---
+import { skills } from "../data/skills";
+---
+
+<section id="skills" class="section" aria-labelledby="skills-title">
+  <h2 id="skills-title" class="section-title">
+    Skills
+  </h2>
+  <dl>
+    {skills.map((s) => (
+      <div class="item">
+        <dt>{s.group}</dt>
+        <dd>{s.items.join(", ")}</dd>
+      </div>
+    ))}
+  </dl>
+</section>
+
+<style>
+  dl {
+    display: grid;
+    gap: 14px;
+    font-size: 16.5px;
+    line-height: 1.55;
+  }
+  .item {
+    display: grid;
+    grid-template-columns: 190px minmax(0, 1fr);
+    gap: 24px;
+  }
+  dt {
+    font-weight: 600;
+  }
+  dd {
+    color: var(--body);
+  }
+  @media (max-width: 767px) {
+    dl {
+      font-size: 16px;
+    }
+    .item {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 2px;
+    }
+  }
+</style>

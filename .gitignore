@@ -45,3 +45,10 @@ amplifytools.xcconfig
 
 # brainstorming mockups
 .superpowers/
+
+# astro / test output
+dist/
+.astro/
+playwright-report/
+test-results/
+.lighthouseci/
