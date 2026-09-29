@@ -9,7 +9,8 @@
   --accent: #1e3a8a;
   --font-display: "Newsreader Variable", Georgia, serif;
   --font-body: "IBM Plex Sans", system-ui, sans-serif;
-  --col: 760px;
+  /* Fluid column: 86% of the window, never narrower than 760px or wider than 1600px. */
+  --col: clamp(760px, 86vw, 1600px);
   --pad-section: 56px;
   --gap-section: 32px;
 }
@@ -90,6 +91,13 @@ a {
 .container {
   width: min(var(--col), 100% - 40px);
   margin-inline: auto;
+}
+
+/* The column is wide, but running text keeps a comfortable line length. */
+main p,
+main li,
+main dd {
+  max-width: 72ch;
 }
 
 .section {

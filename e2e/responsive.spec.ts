@@ -37,6 +37,21 @@ for (const width of widths) {
   });
 }
 
+for (const width of [1024, 1280, 1920, 2560]) {
+  test.describe(`fluid layout at ${width}px`, () => {
+    test.use({ viewport: { width, height: 900 } });
+    test("content scales with the window, capped on ultra-wide screens", async ({ page }) => {
+      await page.goto("/");
+      const main = (await page.locator("main").boundingBox())!;
+      const expected = Math.min(Math.max(width * 0.86, 760), 1600);
+      expect(Math.abs(main.width - expected)).toBeLessThanOrEqual(2);
+      // Running text keeps a readable line length (72ch) however wide the column gets.
+      const intro = (await page.locator(".hero .intro").boundingBox())!;
+      expect(intro.width).toBeLessThanOrEqual(900);
+    });
+  });
+}
+
 test.describe("phone header", () => {
   test.use({ viewport: { width: 390, height: 844 } });
   test("hides section links but keeps Resume", async ({ page }) => {
