@@ -1,0 +1,16 @@
+---
+import { formatDate } from "../lib/dates";
+interface Props {
+  start: string;
+  end?: string;
+}
+const { start, end } = Astro.props;
+---
+
+<time datetime={start}>{formatDate(start)}</time>
+{end && (
+  <Fragment>
+    {" – "}
+    {end === "present" ? "Present" : <time datetime={end}>{formatDate(end)}</time>}
+  </Fragment>
+)}

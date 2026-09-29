@@ -74,6 +74,11 @@ describe("404 page", () => {
     expect(page).toContain('href="/resume.pdf"');
   });
 
+  test("noindex 404 page does not declare a canonical URL", () => {
+    const page = readFileSync("dist/404.html", "utf8");
+    expect(page).not.toContain('rel="canonical"');
+  });
+
   test("sitemap lists the home page only", () => {
     const xml = readFileSync("dist/sitemap-0.xml", "utf8");
     expect(xml).toContain("<loc>https://www.dannydominguez.dev/</loc>");

@@ -1,6 +1,6 @@
 ---
 import { companies, education } from "../data/experience";
-import { formatRange } from "../lib/dates";
+import DateRange from "./DateRange.astro";
 ---
 
 <section id="experience" class="section" aria-labelledby="experience-title">
@@ -12,7 +12,7 @@ import { formatRange } from "../lib/dates";
       <div class="row">
         <h3 class="org">{c.company}</h3>
         <span class="muted when">
-          <time datetime={c.start}>{formatRange(c.start, c.end)}</time>
+          <DateRange start={c.start} end={c.end} />
         </span>
       </div>
       {c.roles.map((r) => (
@@ -20,7 +20,7 @@ import { formatRange } from "../lib/dates";
           <div class="row">
             <h4>{r.title}</h4>
             <span class="muted when">
-              <time datetime={r.start}>{formatRange(r.start, r.end)}</time>
+              <DateRange start={r.start} end={r.end} />
             </span>
           </div>
           <ul>
@@ -39,7 +39,7 @@ import { formatRange } from "../lib/dates";
         <p>{e.degree}</p>
       </div>
       <span class="muted when">
-        <time datetime={e.start}>{formatRange(e.start, e.end)}</time>
+        <DateRange start={e.start} end={e.end} />
       </span>
     </div>
   ))}

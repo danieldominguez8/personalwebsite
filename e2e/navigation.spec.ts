@@ -41,33 +41,32 @@ test("every link is reachable by keyboard with a visible focus ring", async ({
   page,
   browserName,
 }) => {
-  const expected = await page.evaluate(
-    () =>
-      new Set(
-        [...document.querySelectorAll("a[href]")].map(
-          (a) => `${a.getAttribute("href")}|${a.textContent?.trim()}`,
-        ),
-      ).size,
-  );
+  // Number every link so duplicates (header/hero/footer "Resume") are tracked individually.
+  const total = await page.evaluate(() => {
+    const links = [...document.querySelectorAll("a[href]")];
+    links.forEach((a, i) => a.setAttribute("data-tab-id", String(i)));
+    return links.length;
+  });
   const seen = new Set<string>();
-  for (let i = 0; i < expected + 10; i++) {
+  for (let i = 0; i < total + 10; i++) {
     await page.keyboard.press(tabKey(browserName));
     const info = await page.evaluate(() => {
       const el = document.activeElement as HTMLElement | null;
       if (!el || el.tagName !== "A") return null;
       const s = getComputedStyle(el);
-      return {
-        key: `${el.getAttribute("href")}|${el.textContent?.trim()}`,
-        outline: s.outlineStyle,
-        width: s.outlineWidth,
-      };
+      return { id: el.dataset.tabId!, outline: s.outlineStyle, width: s.outlineWidth };
     });
     if (!info) continue;
-    expect(info.outline, info.key).not.toBe("none");
-    expect(parseFloat(info.width), info.key).toBeGreaterThanOrEqual(2);
-    seen.add(info.key);
+    expect(info.outline, `link ${info.id}`).not.toBe("none");
+    expect(parseFloat(info.width), `link ${info.id}`).toBeGreaterThanOrEqual(2);
+    seen.add(info.id);
   }
-  expect(seen.size).toBe(expected);
+  expect(seen.size).toBe(total);
+});
+
+test("DD badge uses a font weight that is actually loaded", async ({ page }) => {
+  const weight = await page.locator(".badge").evaluate((el) => getComputedStyle(el).fontWeight);
+  expect(["400", "500", "600"]).toContain(weight);
 });
 
 test("resume downloads as a PDF", async ({ request }) => {

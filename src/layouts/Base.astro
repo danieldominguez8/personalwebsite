@@ -10,8 +10,10 @@ import Footer from "../components/Footer.astro";
 interface Props {
   title: string;
   description: string;
+  /** Pages that should not be indexed get robots noindex and no canonical URL. */
+  noindex?: boolean;
 }
-const { title, description } = Astro.props;
+const { title, description, noindex = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 const ogImage = new URL("/images/headshot.jpg", Astro.site).href;
 ---
@@ -23,7 +25,7 @@ const ogImage = new URL("/images/headshot.jpg", Astro.site).href;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
+    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
     <meta name="theme-color" content="#1e3a8a" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />

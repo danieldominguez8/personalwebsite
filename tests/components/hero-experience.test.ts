@@ -37,24 +37,29 @@ describe("Hero", () => {
 describe("Experience", () => {
   test("groups roles under the company with formatted dates", async () => {
     const html = await container.renderToString(Experience);
+    const text = html.replace(/<[^>]+>/g, "");
     expect(html).toContain('id="experience"');
     expect(html).toContain(">Invoice Cloud<");
-    expect(html).toContain("Aug 2022 – Present");
-    expect(html).toContain("Dec 2024 – Present");
-    expect(html).toContain("Aug 2022 – Nov 2024");
+    expect(text).toContain("Aug 2022 – Present");
+    expect(text).toContain("Dec 2024 – Present");
+    expect(text).toContain("Aug 2022 – Nov 2024");
     const bulletCount = companies.flatMap((c) => c.roles.flatMap((r) => r.bullets)).length;
     expect(html.match(/<li\b/g)).toHaveLength(bulletCount);
   });
 
   test("shows education with year range", async () => {
     const html = await container.renderToString(Experience);
+    const text = html.replace(/<[^>]+>/g, "");
     expect(html).toContain("Drexel University");
     expect(html).toContain("M.S., Software Engineering");
-    expect(html).toContain("2020 – 2022");
+    expect(text).toContain("2020 – 2022");
   });
 
-  test("dates are machine readable", async () => {
+  test("each date is its own machine-readable <time>", async () => {
     const html = await container.renderToString(Experience);
-    expect(html).toMatch(/<time datetime="2024-12"[\s>]/);
+    expect(html).toMatch(/<time datetime="2022-08"[^>]*>Aug 2022<\/time>/);
+    expect(html).toMatch(/<time datetime="2024-11"[^>]*>Nov 2024<\/time>/);
+    expect(html).toMatch(/<time datetime="2024-12"[^>]*>Dec 2024<\/time>/);
+    expect(html).not.toMatch(/<time[^>]*>[^<]*–/);
   });
 });
