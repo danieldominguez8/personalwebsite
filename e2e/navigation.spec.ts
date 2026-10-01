@@ -87,5 +87,8 @@ test("contact and profile links are correct", async ({ page }) => {
   await expect(appStore.nth(0)).toHaveAttribute("href", /loter%C3%ADa-tradicional\/id1612279702/);
   await expect(appStore.nth(1)).toHaveAttribute("href", /free-together\/id6760777597/);
   await expect(page.getByRole("link", { name: "Website" })).toHaveCount(2);
-  await expect(page.locator('a[href*="play.google.com"]')).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "Google Play" })).toHaveAttribute(
+    "href",
+    "https://play.google.com/store/apps/details?id=com.loteriadominguez",
+  );
 });
