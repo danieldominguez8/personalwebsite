@@ -61,3 +61,39 @@ test.describe("phone header", () => {
     await expect(nav.getByRole("link", { name: "Resume" })).toBeVisible();
   });
 });
+
+test.describe("canvas details on desktop", () => {
+  test.use({ viewport: { width: 1280, height: 900 } });
+  test("project rows show role, date and stack on one line above the description", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const row = page.locator("#projects article.row").filter({ hasText: "Rally Competitions" });
+    const meta = row.locator(".meta");
+    await expect(meta).toHaveText(/Founder · 2026 · Next\.js · .*GitLab CI\/CD/);
+    await expect(row.locator(".stack-block")).toBeHidden();
+    const metaBox = (await meta.boundingBox())!;
+    const descBox = (await row.locator(".desc").boundingBox())!;
+    expect(metaBox.y).toBeLessThan(descBox.y);
+  });
+});
+
+test.describe("canvas details on phone", () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+  test("project rows keep the stack on its own line", async ({ page }) => {
+    await page.goto("/");
+    const row = page.locator("#projects article.row").filter({ hasText: "Rally Competitions" });
+    await expect(row.locator(".stack-block")).toBeVisible();
+    // innerText ignores the stack copy that CSS hides on phones.
+    expect(await row.locator(".meta").evaluate((el) => (el as HTMLElement).innerText.trim())).toBe(
+      "Founder · 2026",
+    );
+  });
+
+  test("footer shows links before the copyright line", async ({ page }) => {
+    await page.goto("/");
+    const links = (await page.locator(".site-footer ul").boundingBox())!;
+    const copyright = (await page.locator(".site-footer .copyright").boundingBox())!;
+    expect(links.y).toBeLessThan(copyright.y);
+  });
+});

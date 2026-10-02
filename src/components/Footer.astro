@@ -5,7 +5,7 @@ const year = new Date().getFullYear();
 
 <footer class="site-footer">
   <div class="container bar">
-    <span>
+    <span class="copyright">
       © {year} {profile.name}
     </span>
     <ul>
@@ -46,5 +46,15 @@ const year = new Date().getFullYear();
   }
   a {
     color: var(--muted);
+  }
+  /* Phones: links first, copyright after (canvas). */
+  @media (max-width: 767px) {
+    .bar {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    ul {
+      order: -1;
+    }
   }
 </style>
