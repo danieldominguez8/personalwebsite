@@ -79,6 +79,7 @@ describe("content data", () => {
     expect(links["dannydominguez.dev"]).toEqual([
       "Website https://www.dannydominguez.dev",
       "GitHub https://github.com/danieldominguez8/personalwebsite",
+      "Test runs https://github.com/danieldominguez8/personalwebsite/actions/workflows/ci.yml",
     ]);
   });
 

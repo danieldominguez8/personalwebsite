@@ -55,7 +55,13 @@ describe("built index.html", () => {
 
   test("no inline styles, scripts, or javascript: urls", () => {
     expect(html).not.toMatch(/\sstyle="/);
-    expect(html).not.toMatch(/<script\b(?![^>]*type="application\/ld\+json")/);
+    // One small module script is allowed: the ¡Corre y se va! card caller (progressive enhancement).
+    const scripts = html.match(/<script\b[^>]*>[\s\S]*?<\/script>/g) ?? [];
+    expect(scripts.length).toBe(1);
+    for (const s of scripts) {
+      expect(s).toMatch(/type="module"/);
+      expect(s.length).toBeLessThan(2500);
+    }
     expect(html).not.toMatch(/href="javascript:/i);
   });
 

@@ -8,9 +8,16 @@ const rows = projects.filter((p) => p.layout === "row");
 
 <section id="projects" class="section band" aria-labelledby="projects-title">
   <div class="container">
-    <h2 id="projects-title" class="section-title">
-      Personal Projects
-    </h2>
+    <div class="heading-row">
+      <h2 id="projects-title" class="section-title">
+        Personal Projects
+      </h2>
+      <!-- Hidden until the script runs, so visitors without JavaScript never see a dead button. -->
+      <button id="card-caller" class="caller" type="button" hidden>
+        ¡Corre y se va! <span class="hint">Call a card</span>
+      </button>
+    </div>
+    <p id="card-caller-status" class="sr-only" role="status" aria-live="polite"></p>
     <div class="grid">
       {cards.map((p) => (
         <ProjectCard project={p} />
@@ -24,6 +31,32 @@ const rows = projects.filter((p) => p.layout === "row");
   </div>
 </section>
 
+<script>
+  // ¡Corre y se va! — like the Lotería caller, pick a random project card (never the same twice
+  // in a row), show it, focus its name, and announce it to screen readers.
+  const button = document.querySelector<HTMLButtonElement>("#card-caller");
+  const status = document.querySelector<HTMLElement>("#card-caller-status");
+  const cards = [...document.querySelectorAll<HTMLElement>("#projects article")];
+  if (button && status && cards.length > 1) {
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let last = -1;
+    button.hidden = false;
+    button.addEventListener("click", () => {
+      let next = Math.floor(Math.random() * (last === -1 ? cards.length : cards.length - 1));
+      if (last !== -1 && next >= last) next += 1;
+      const card = cards[next];
+      cards.forEach((c) => c.removeAttribute("data-called"));
+      card.setAttribute("data-called", "");
+      card.scrollIntoView({ behavior: reduceMotion.matches ? "auto" : "smooth", block: "center" });
+      const name = card.querySelector<HTMLElement>("h3");
+      // Announce first, then move focus (focusing the heading also reads its name).
+      status.textContent = `Called: ${name?.textContent?.trim() ?? "a project"}`;
+      name?.focus({ preventScroll: true });
+      last = next;
+    });
+  }
+</script>
+
 <style>
   /* The one bold element: a full-width cobalt band of Lotería-style cards. */
   .band {
@@ -32,6 +65,49 @@ const rows = projects.filter((p) => p.layout === "row");
   }
   /* Every link in the band sits on a paper card, so the default rosa focus ring
      (5.8:1 on paper) applies; marigold would be 1.8:1 there. */
+  .heading-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px 24px;
+  }
+  .caller {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 10px;
+    background: var(--marigold);
+    color: var(--ink);
+    border: 3px solid var(--ink);
+    border-radius: 6px;
+    padding: 10px 18px;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 24px;
+    line-height: 1.1;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .caller[hidden] {
+    display: none;
+  }
+  .caller .hint {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .caller:hover {
+    background: var(--paper);
+  }
+  .caller:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--ink);
+  }
+  /* On the cobalt band the ring is paper (8.97:1); rosa would be 1.55:1. */
+  .caller:focus-visible {
+    outline: 3px solid var(--paper);
+    outline-offset: 4px;
+  }
   .grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -42,7 +118,7 @@ const rows = projects.filter((p) => p.layout === "row");
     flex-direction: column;
     gap: 24px;
   }
-  @media (max-width: 767px) {
+  @media screen and (max-width: 767px) {
     .grid {
       grid-template-columns: minmax(0, 1fr);
       gap: 24px;

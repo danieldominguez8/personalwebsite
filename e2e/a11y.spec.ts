@@ -69,8 +69,9 @@ const toHex = (rgb: string) =>
 
 for (const [label, selector] of [
   ["a page link", ".hero a[href*='github.com/danieldominguez8']"],
-  ["a link on the projects band", "#projects h2 ~ * a[href*='apps.apple.com']"],
+  ["a link on the projects band", "#projects .grid a[href*='apps.apple.com']"],
   ["a footer link on the black footer", ".site-footer a[href*='linkedin.com']"],
+  ["the card-caller button on the cobalt band", "#card-caller"],
 ] as const) {
   test(`keyboard focus ring on ${label} has 3:1 contrast against its background`, async ({
     page,
