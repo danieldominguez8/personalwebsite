@@ -10,7 +10,7 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? [["github"], ["html", { open: "never" }]] : "list",
   use: { baseURL, trace: "on-first-retry" },
-  expect: { toHaveScreenshot: { maxDiffPixelRatio: 0.002, animations: "disabled" } },
+  expect: { toHaveScreenshot: { maxDiffPixels: 200, animations: "disabled" } },
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"] }, testIgnore: /visual|smoke/ },
     { name: "firefox", use: { ...devices["Desktop Firefox"] }, testIgnore: /visual|smoke/ },

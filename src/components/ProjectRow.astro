@@ -21,11 +21,12 @@ const { project: p } = Astro.props;
   )}
   <div class="text">
     <h3>{p.name}</h3>
-    <p class="muted small">
+    <p class="muted small meta">
       {p.role} · {formatRange(p.start, p.end)}
+      <span class="stack-inline">{` · ${p.stack.join(" · ")}`}</span>
     </p>
     <p class="desc">{p.description}</p>
-    <p class="muted small">{p.stack.join(" · ")}</p>
+    <p class="muted small stack-block">{p.stack.join(" · ")}</p>
   </div>
   {p.links.length > 0 && (
     <ul class="links">
@@ -50,6 +51,10 @@ const { project: p } = Astro.props;
     justify-content: space-between;
     align-items: center;
     gap: 12px 24px;
+  }
+  /* Desktop shows the stack on the role line (canvas); phones give it its own line. */
+  .stack-block {
+    display: none;
   }
   .thumb {
     width: 150px;
@@ -96,6 +101,12 @@ const { project: p } = Astro.props;
     .thumb {
       width: 100%;
       height: 180px;
+    }
+    .stack-inline {
+      display: none;
+    }
+    .stack-block {
+      display: block;
     }
   }
 </style>
