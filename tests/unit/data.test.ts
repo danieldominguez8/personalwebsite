@@ -70,6 +70,7 @@ describe("content data", () => {
     );
     expect(links["Lotería Tradicional"]).toEqual([
       "App Store https://apps.apple.com/us/app/loter%C3%ADa-tradicional/id1612279702",
+      "Google Play https://play.google.com/store/apps/details?id=com.loteriadominguez",
     ]);
     expect(links["FreeTogether"]).toEqual([
       "App Store https://apps.apple.com/us/app/free-together/id6760777597",
@@ -79,7 +80,6 @@ describe("content data", () => {
       "Website https://www.dannydominguez.dev",
       "GitHub https://github.com/danieldominguez8/personalwebsite",
     ]);
-    expect(JSON.stringify(projects)).not.toMatch(/play\.google\.com/);
   });
 
   test("the capstone keeps its original screenshot", () => {
