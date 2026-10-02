@@ -104,16 +104,28 @@ describe("links work from every built page", () => {
 });
 
 describe("design system in the build", () => {
+  // CSS is inlined into <style> blocks; also read any emitted .css files.
   const css = () =>
-    readdirSync("dist/_astro")
-      .filter((f) => f.endsWith(".css"))
-      .map((f) => readFileSync(`dist/_astro/${f}`, "utf8"))
-      .join("\n");
+    [
+      ...readdirSync("dist/_astro")
+        .filter((f) => f.endsWith(".css"))
+        .map((f) => readFileSync(`dist/_astro/${f}`, "utf8")),
+      ...[
+        ...readFileSync("dist/index.html", "utf8").matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g),
+      ].map((m) => m[1]),
+    ].join("\n");
 
   test("Big Shoulders Display is self-hosted and Newsreader is gone", () => {
     expect(css()).toMatch(/@font-face\{[^}]*font-family:\s*["']?Big Shoulders Display Variable/);
     expect(css()).not.toMatch(/Newsreader/i);
     expect(readdirSync("dist/_astro").some((f) => /newsreader/i.test(f))).toBe(false);
+  });
+
+  test("the preloaded font is the same file @font-face uses (no double download)", () => {
+    const html = readFileSync("dist/index.html", "utf8");
+    const preloaded = html.match(/rel="preload" href="([^"]+\.woff2)"/)?.[1];
+    expect(preloaded).toBeTruthy();
+    expect(css()).toContain(`url(${preloaded})`);
   });
 
   test("browser theme color matches the cobalt token", () => {
@@ -129,5 +141,23 @@ describe("design system in the build", () => {
         .replace(/<[^>]+>/g, " ");
       expect(text, file).not.toContain("·");
     }
+  });
+});
+
+describe("first paint is not blocked", () => {
+  test("stylesheets are inlined, not render-blocking requests", () => {
+    const html = readFileSync("dist/index.html", "utf8");
+    expect(html).not.toMatch(/<link[^>]+rel="stylesheet"/);
+    expect(html).toMatch(/<style[^>]*>[\s\S]*--cobalt/);
+  });
+
+  test("the headline font is preloaded", () => {
+    const html = readFileSync("dist/index.html", "utf8");
+    const preload = html.match(/<link[^>]+rel="preload"[^>]*>/g) ?? [];
+    const font = preload.find((l) => /big-shoulders-display-latin-wght-normal[^"]*\.woff2/.test(l));
+    expect(font, "preload link for the Big Shoulders latin woff2").toBeTruthy();
+    expect(font).toMatch(/as="font"/);
+    expect(font).toMatch(/type="font\/woff2"/);
+    expect(font).toMatch(/crossorigin/);
   });
 });

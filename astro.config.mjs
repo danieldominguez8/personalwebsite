@@ -4,6 +4,7 @@ import sitemap from "@astrojs/sitemap";
 export default defineConfig({
   site: "https://www.dannydominguez.dev",
   output: "static",
-  build: { inlineStylesheets: "auto" },
+  // Inline all CSS (~20 KB on the home page, mostly font-face rules) so the first paint never waits on a stylesheet request.
+  build: { inlineStylesheets: "always" },
   integrations: [sitemap({ filter: (page) => !page.includes("404") })],
 });
