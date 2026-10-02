@@ -4,8 +4,13 @@ import "@fontsource/ibm-plex-sans/400.css";
 import "@fontsource/ibm-plex-sans/500.css";
 import "@fontsource/ibm-plex-sans/600.css";
 import "../styles/global.css";
-// Preload the headline font (the LCP element) so it arrives with the first paint instead of swapping in.
+// Preload every latin font file so text never swaps fonts after first paint (that swap
+// shifted the layout on CI: CLS 0.147). Each URL is the same file its @font-face uses.
 import displayFontUrl from "@fontsource-variable/big-shoulders-display/files/big-shoulders-display-latin-wght-normal.woff2?url";
+import plex400Url from "@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff2?url";
+import plex500Url from "@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-500-normal.woff2?url";
+import plex600Url from "@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-600-normal.woff2?url";
+const fontPreloads = [displayFontUrl, plex400Url, plex500Url, plex600Url];
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 
@@ -29,7 +34,9 @@ const ogImage = new URL("/images/headshot.jpg", Astro.site).href;
     <meta name="description" content={description} />
     {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
     <meta name="theme-color" content="#1c3faa" />
-    <link rel="preload" href={displayFontUrl} as="font" type="font/woff2" crossorigin />
+    {fontPreloads.map((href) => (
+      <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />
+    ))}
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/logo192.png" />

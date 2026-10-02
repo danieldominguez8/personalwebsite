@@ -151,6 +151,23 @@ describe("first paint is not blocked", () => {
     expect(html).toMatch(/<style[^>]*>[\s\S]*--cobalt/);
   });
 
+  test("every latin web font is preloaded, so no font swap shifts the layout", () => {
+    // CI Lighthouse traced CLS 0.147 to IBM Plex Sans swapping in after first paint.
+    const html = readFileSync("dist/index.html", "utf8");
+    const preloaded = [...html.matchAll(/rel="preload" href="([^"]+\.woff2)"/g)].map((m) => m[1]);
+    for (const name of [
+      "big-shoulders-display-latin-wght-normal",
+      "ibm-plex-sans-latin-400-normal",
+      "ibm-plex-sans-latin-500-normal",
+      "ibm-plex-sans-latin-600-normal",
+    ]) {
+      expect(
+        preloaded.some((u) => u.includes(name)),
+        name,
+      ).toBe(true);
+    }
+  });
+
   test("the headline font is preloaded", () => {
     const html = readFileSync("dist/index.html", "utf8");
     const preload = html.match(/<link[^>]+rel="preload"[^>]*>/g) ?? [];

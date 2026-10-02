@@ -4,3 +4,7 @@ declare module "@fontsource-variable/big-shoulders-display/files/*?url" {
   const url: string;
   export default url;
 }
+declare module "@fontsource/ibm-plex-sans/files/*?url" {
+  const url: string;
+  export default url;
+}
