@@ -15,7 +15,9 @@ describe("Hero", () => {
     const html = await container.renderToString(Hero);
     expect(html.match(/<h1\b/g)).toHaveLength(1);
     expect(html).toContain(profile.headline);
-    expect(html).toContain(`${profile.title} · ${profile.location}`);
+    expect(html).toMatch(new RegExp(`class="title"[^>]*>${profile.title}<`));
+    expect(html).toMatch(new RegExp(`class="location"[^>]*>${profile.location}<`));
+    expect(html).not.toContain("·");
     expect(html).toContain(profile.intro);
     expect(html).toContain(profile.availability);
     expect(html).toMatch(/href="\/resume\.pdf"[^>]*>\s*Download resume/);

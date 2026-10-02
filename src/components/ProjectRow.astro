@@ -7,106 +7,158 @@ interface Props {
 const { project: p } = Astro.props;
 ---
 
-<article class="row">
-  {p.image && (
-    <img
-      class="thumb"
-      src={p.image.src}
-      alt={p.image.alt}
-      width={p.image.width}
-      height={p.image.height}
-      loading="lazy"
-      decoding="async"
-    />
-  )}
-  <div class="text">
-    <h3>{p.name}</h3>
-    <p class="muted small meta">
-      {p.role} · {formatRange(p.start, p.end)}
-      <span class="stack-inline">{` · ${p.stack.join(" · ")}`}</span>
-    </p>
-    <p class="desc">{p.description}</p>
-    <p class="muted small stack-block">{p.stack.join(" · ")}</p>
+<article class="lot-row">
+  <div class="frame">
+    <p class="year">{p.start.slice(0, 4)}</p>
+    {p.image && (
+      <img
+        class="thumb"
+        src={p.image.src}
+        alt={p.image.alt}
+        width={p.image.width}
+        height={p.image.height}
+        loading="lazy"
+        decoding="async"
+      />
+    )}
+    <div class="text">
+      <h3 class="name">{p.name}</h3>
+      <p class="meta">
+        <span class="role">{p.role}</span>
+        <span class="range">{formatRange(p.start, p.end)}</span>
+      </p>
+      <p class="desc">{p.description}</p>
+      <p class="stack">{p.stack.join(", ")}</p>
+    </div>
+    {p.links.length > 0 && (
+      <ul class="links">
+        {p.links.map((l) => (
+          <li>
+            <a href={l.url} rel="noopener">
+              {l.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
   </div>
-  {p.links.length > 0 && (
-    <ul class="links">
-      {p.links.map((l) => (
-        <li>
-          <a href={l.url} rel="noopener">
-            {l.label}
-          </a>
-        </li>
-      ))}
-    </ul>
-  )}
 </article>
 
 <style>
-  .row {
-    background: var(--surface);
-    border: 1px solid var(--rule);
-    border-radius: 12px;
-    padding: 20px 22px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px 24px;
+  /* Wide Lotería frame for text projects: marigold year cell, content, links. */
+  .lot-row {
+    background: var(--paper);
+    color: var(--ink);
+    border: 4px solid var(--ink);
+    border-radius: 6px;
+    padding: 8px;
   }
-  /* Desktop shows the stack on the role line (canvas); phones give it its own line. */
-  .stack-block {
-    display: none;
+  .frame {
+    border: 2px solid var(--ink);
+    display: flex;
+    align-items: stretch;
+  }
+  .year {
+    flex: 0 0 88px;
+    display: grid;
+    place-items: center;
+    background: var(--marigold);
+    border-right: 2px solid var(--ink);
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 30px;
+    font-variant-numeric: tabular-nums;
   }
   .thumb {
-    width: 150px;
-    height: 110px;
+    flex: 0 0 160px;
+    width: 160px;
+    height: auto;
     object-fit: cover;
     object-position: top;
-    border: 1px solid var(--rule);
-    border-radius: 8px;
-    flex-shrink: 0;
+    border-right: 2px solid var(--ink);
   }
   .text {
+    flex: 1;
+    min-width: 0;
+    padding: 18px 20px;
     display: flex;
     flex-direction: column;
     gap: 6px;
-    flex: 1;
   }
-  h3 {
-    font-size: 18px;
-    font-weight: 600;
+  .name {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 28px;
+    line-height: 1.05;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    /* Long single-word names (DANNYDOMINGUEZ.DEV) must wrap on narrow phones. */
+    overflow-wrap: anywhere;
   }
-  .small {
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 14px;
     font-size: 14px;
+    font-weight: 500;
+    color: var(--graphite);
   }
   .desc {
-    font-size: 15.5px;
+    font-size: 16px;
     line-height: 1.6;
-    color: var(--secondary);
+  }
+  .stack {
+    font-size: 14px;
+    color: var(--graphite);
   }
   .links {
     list-style: none;
-    padding: 0;
+    padding: 18px 20px;
     flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
     font-size: 15px;
+    font-weight: 600;
   }
   .links a {
-    color: var(--accent);
+    color: var(--cobalt);
+  }
+  .links a:hover {
+    color: var(--ink);
+    text-decoration-thickness: 2px;
   }
   @media (max-width: 767px) {
-    .row {
+    .frame {
       flex-direction: column;
-      align-items: flex-start;
-      padding: 18px;
+    }
+    .year {
+      flex-basis: auto;
+      place-items: center start;
+      padding: 4px 16px;
+      border-right: 0;
+      border-bottom: 2px solid var(--ink);
+      font-size: 24px;
     }
     .thumb {
+      flex-basis: auto;
       width: 100%;
       height: 180px;
+      border-right: 0;
+      border-bottom: 2px solid var(--ink);
     }
-    .stack-inline {
-      display: none;
+    .text {
+      padding: 16px;
     }
-    .stack-block {
-      display: block;
+    .name {
+      font-size: 24px;
+    }
+    .links {
+      padding: 0 16px 16px;
+      flex-direction: row;
+      justify-content: flex-start;
+      gap: 20px;
     }
   }
 </style>

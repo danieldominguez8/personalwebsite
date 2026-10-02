@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, test } from "vitest";
-import { readFileSync, existsSync } from "node:fs";
+import { readFileSync, existsSync, readdirSync } from "node:fs";
 
 let html = "";
 beforeAll(() => {
@@ -99,6 +99,35 @@ describe("links work from every built page", () => {
       for (const [, anchor] of page.matchAll(/href="\/#([^"]+)"/g)) {
         expect(homeIds, `${file} /#${anchor}`).toContain(anchor);
       }
+    }
+  });
+});
+
+describe("design system in the build", () => {
+  const css = () =>
+    readdirSync("dist/_astro")
+      .filter((f) => f.endsWith(".css"))
+      .map((f) => readFileSync(`dist/_astro/${f}`, "utf8"))
+      .join("\n");
+
+  test("Big Shoulders Display is self-hosted and Newsreader is gone", () => {
+    expect(css()).toMatch(/@font-face\{[^}]*font-family:\s*["']?Big Shoulders Display Variable/);
+    expect(css()).not.toMatch(/Newsreader/i);
+    expect(readdirSync("dist/_astro").some((f) => /newsreader/i.test(f))).toBe(false);
+  });
+
+  test("browser theme color matches the cobalt token", () => {
+    expect(readFileSync("dist/index.html", "utf8")).toContain(
+      '<meta name="theme-color" content="#1c3faa"',
+    );
+  });
+
+  test("no middle-dot separators in visible text", () => {
+    for (const file of ["dist/index.html", "dist/404.html"]) {
+      const text = readFileSync(file, "utf8")
+        .replace(/<(script|style)[^>]*>[\s\S]*?<\/\1>/g, "")
+        .replace(/<[^>]+>/g, " ");
+      expect(text, file).not.toContain("·");
     }
   });
 });

@@ -16,6 +16,14 @@ All copy lives in typed data files — change a job, project, or skill in one pl
 Every file is validated by a Zod schema (`src/data/schema.ts`) at build time, and `tests/unit/data.test.ts` checks dates, images, links, and that no placeholder text ships.
 Images live in `public/images/` and must include `width`, `height`, and descriptive `alt` text. The resume is `public/resume.pdf`.
 
+## Design
+
+The "Lotería frame" look: a quiet black-on-white page with one bold element, the cobalt Personal Projects band of Lotería-style cards (heavy black frame, year in the corner, marigold name band).
+
+- Tokens live at the top of `src/styles/global.css`: paper `#FFFFFF`, ink `#000000`, graphite `#4D4D4D`, cobalt `#1C3FAA`, rosa `#C8005F` (focus ring and the Lotería figure), marigold `#F5B700` (name bands, footer focus ring).
+- Fonts are self-hosted: Big Shoulders Display (headlines, card names, the DD badge) and IBM Plex Sans (everything else).
+- Contrast pairs and focus-ring contrast are tested in `e2e/a11y.spec.ts`; change both together.
+
 ## Commands
 
 Requires Node 24 (see `.nvmrc`).

@@ -3,36 +3,39 @@ import { skills } from "../data/skills";
 ---
 
 <section id="skills" class="section" aria-labelledby="skills-title">
-  <h2 id="skills-title" class="section-title">
-    Skills
-  </h2>
-  <dl>
-    {skills.map((s) => (
-      <div class="item">
-        <dt>{s.group}</dt>
-        <dd>{s.items.join(", ")}</dd>
-      </div>
-    ))}
-  </dl>
+  <div class="container">
+    <h2 id="skills-title" class="section-title">
+      Skills
+    </h2>
+    <dl>
+      {skills.map((s) => (
+        <div class="item">
+          <dt>{s.group}</dt>
+          <dd>{s.items.join(", ")}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
 </section>
 
 <style>
   dl {
     display: grid;
-    gap: 14px;
-    font-size: 16.5px;
+    font-size: 17px;
     line-height: 1.55;
   }
   .item {
     display: grid;
-    grid-template-columns: 190px minmax(0, 1fr);
+    grid-template-columns: 220px minmax(0, 1fr);
     gap: 24px;
+    padding-block: 14px;
+    border-top: 1px solid var(--line);
+  }
+  .item:last-child {
+    border-bottom: 1px solid var(--line);
   }
   dt {
     font-weight: 600;
-  }
-  dd {
-    color: var(--body);
   }
   @media (max-width: 767px) {
     dl {
@@ -41,6 +44,7 @@ import { skills } from "../data/skills";
     .item {
       grid-template-columns: minmax(0, 1fr);
       gap: 2px;
+      padding-block: 12px;
     }
   }
 </style>

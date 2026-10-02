@@ -3,102 +3,119 @@ import { companies, education } from "../data/experience";
 import DateRange from "./DateRange.astro";
 ---
 
-<section id="experience" class="section" aria-labelledby="experience-title">
-  <h2 id="experience-title" class="section-title">
-    Experience
-  </h2>
-  {companies.map((c) => (
-    <div class="company">
-      <div class="row">
-        <h3 class="org">{c.company}</h3>
-        <span class="muted when">
-          <DateRange start={c.start} end={c.end} />
-        </span>
-      </div>
-      {c.roles.map((r) => (
-        <div class="role">
-          <div class="row">
+<section id="experience" class="section experience" aria-labelledby="experience-title">
+  <div class="container">
+    <h2 id="experience-title" class="section-title">
+      Experience
+    </h2>
+    {companies.map((c) => (
+      <div class="company">
+        {/* DOM order stays title → date for screen readers; CSS moves the date into the rail. */}
+        <div class="entry head">
+          <h3 class="org">{c.company}</h3>
+          <span class="when">
+            <DateRange start={c.start} end={c.end} />
+          </span>
+        </div>
+        {c.roles.map((r) => (
+          <div class="entry role">
             <h4>{r.title}</h4>
-            <span class="muted when">
+            <span class="when">
               <DateRange start={r.start} end={r.end} />
             </span>
+            <ul>
+              {r.bullets.map((b) => (
+                <li>{b}</li>
+              ))}
+            </ul>
           </div>
-          <ul>
-            {r.bullets.map((b) => (
-              <li>{b}</li>
-            ))}
-          </ul>
-        </div>
-      ))}
-    </div>
-  ))}
-  {education.map((e) => (
-    <div class="education row">
-      <div>
-        <h3 class="org">{e.school}</h3>
-        <p>{e.degree}</p>
+        ))}
       </div>
-      <span class="muted when">
-        <DateRange start={e.start} end={e.end} />
-      </span>
-    </div>
-  ))}
+    ))}
+    {education.map((e) => (
+      <div class="entry head education">
+        <h3 class="org">{e.school}</h3>
+        <span class="when">
+          <DateRange start={e.start} end={e.end} />
+        </span>
+        <p class="degree">{e.degree}</p>
+      </div>
+    ))}
+  </div>
 </section>
 
 <style>
+  .experience > .container {
+    border-top: 4px solid var(--ink);
+    padding-top: 28px;
+  }
   .company {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 28px;
   }
-  .row {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+  /* Date rail: dates in a left column, content on the right. */
+  .entry {
+    display: grid;
+    grid-template-columns: 200px minmax(0, 1fr);
+    grid-template-areas:
+      "when title"
+      ". body";
+    column-gap: 32px;
+    row-gap: 10px;
     align-items: baseline;
-    gap: 4px 16px;
   }
-  .org {
-    font-family: var(--font-display);
-    font-weight: 500;
-    font-size: 24px;
+  .entry > :is(h3, h4) {
+    grid-area: title;
+  }
+  .entry > .when {
+    grid-area: when;
+  }
+  .entry > :is(ul, .degree) {
+    grid-area: body;
   }
   .when {
     font-size: 15px;
+    font-weight: 500;
+    color: var(--graphite);
+    font-variant-numeric: tabular-nums;
   }
-  .role {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding-left: 20px;
-    border-left: 2px solid var(--rule);
+  .org {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(28px, 3vw, 36px);
+    line-height: 1.05;
   }
   h4 {
-    font-size: 17px;
+    font-size: 18px;
     font-weight: 600;
   }
   ul {
     padding-left: 20px;
-    font-size: 16.5px;
-    line-height: 1.7;
-    color: var(--body);
+    font-size: 17px;
+    line-height: 1.65;
     display: flex;
     flex-direction: column;
     gap: 6px;
   }
+  li::marker {
+    color: var(--cobalt);
+  }
   .education {
-    border-top: 1px solid var(--rule);
+    border-top: 2px solid var(--ink);
     padding-top: 24px;
   }
-  .education p {
-    color: var(--body);
-  }
   @media (max-width: 767px) {
-    .org {
-      font-size: 22px;
+    .entry {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas:
+        "title"
+        "when"
+        "body";
+      row-gap: 4px;
     }
-    .role {
-      padding-left: 14px;
+    .entry > :is(ul, .degree) {
+      margin-top: 8px;
     }
     ul {
       font-size: 16px;

@@ -3,81 +3,92 @@ import { profile } from "../data/profile";
 ---
 
 <section class="hero" aria-labelledby="hero-title">
-  <div class="identity">
-    <img
-      class="headshot"
-      src={profile.headshot.src}
-      alt={profile.headshot.alt}
-      width={profile.headshot.width}
-      height={profile.headshot.height}
-      fetchpriority="high"
-    />
-    <div>
-      <p class="name">{profile.name}</p>
-      <p class="muted meta">
-        {profile.title} · {profile.location}
-      </p>
+  <div class="container inner">
+    <div class="identity">
+      <img
+        class="headshot"
+        src={profile.headshot.src}
+        alt={profile.headshot.alt}
+        width={profile.headshot.width}
+        height={profile.headshot.height}
+        fetchpriority="high"
+      />
+      <div>
+        <p class="name">{profile.name}</p>
+        <p class="title">{profile.title}</p>
+        <p class="location">{profile.location}</p>
+      </div>
     </div>
+    <h1 id="hero-title">{profile.headline}</h1>
+    <p class="intro">{profile.intro}</p>
+    <ul class="actions">
+      <li>
+        <a class="btn" href={profile.resume}>
+          Download resume
+        </a>
+      </li>
+      <li>
+        <a href={profile.github}>GitHub</a>
+      </li>
+      <li>
+        <a href={profile.linkedin}>LinkedIn</a>
+      </li>
+      <li>
+        <a href={`mailto:${profile.email}`}>Email</a>
+      </li>
+    </ul>
+    <p class="availability">{profile.availability}</p>
   </div>
-  <h1 id="hero-title">{profile.headline}</h1>
-  <p class="intro">{profile.intro}</p>
-  <ul class="actions">
-    <li>
-      <a class="btn" href={profile.resume}>
-        Download resume
-      </a>
-    </li>
-    <li>
-      <a href={profile.github}>GitHub</a>
-    </li>
-    <li>
-      <a href={profile.linkedin}>LinkedIn</a>
-    </li>
-    <li>
-      <a href={`mailto:${profile.email}`}>Email</a>
-    </li>
-  </ul>
-  <p class="muted meta">{profile.availability}</p>
 </section>
 
 <style>
   .hero {
-    padding-block: 96px 80px;
+    padding-block: 72px 24px;
+  }
+  .inner {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 28px;
   }
   .identity {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 18px;
   }
   .headshot {
     width: 88px;
     height: 88px;
     border-radius: 50%;
     object-fit: cover;
-    border: 1px solid var(--rule);
+    border: 3px solid var(--ink);
     flex-shrink: 0;
   }
   .name {
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 600;
+    line-height: 1.3;
   }
-  .meta {
+  .title,
+  .location {
     font-size: 15px;
+    line-height: 1.4;
+    color: var(--graphite);
   }
   h1 {
     font-family: var(--font-display);
-    font-weight: 400;
-    font-size: clamp(36px, 6vw, 58px);
-    line-height: 1.08;
+    font-weight: 800;
+    font-size: clamp(44px, 7.5vw, 112px);
+    line-height: 0.95;
     letter-spacing: -0.01em;
+    max-width: 18ch;
+    /* Avoid a single orphaned word on the last line. */
+    text-wrap: balance;
   }
   .intro {
-    font-size: clamp(17px, 2vw, 19px);
-    line-height: 1.65;
-    color: var(--secondary);
+    font-size: clamp(17px, 1.6vw, 20px);
+    line-height: 1.6;
+    color: var(--graphite);
+    max-width: 60ch;
   }
   .actions {
     list-style: none;
@@ -86,14 +97,18 @@ import { profile } from "../data/profile";
     flex-wrap: wrap;
     align-items: center;
     gap: 16px 28px;
+    font-weight: 500;
   }
-  .actions a:not(.btn) {
-    color: var(--secondary);
+  .availability {
+    font-size: 15px;
+    color: var(--graphite);
   }
   @media (max-width: 767px) {
     .hero {
-      padding-block: 40px 36px;
-      gap: 18px;
+      padding-block: 40px 8px;
+    }
+    .inner {
+      gap: 20px;
     }
     .identity {
       gap: 14px;
@@ -101,9 +116,6 @@ import { profile } from "../data/profile";
     .headshot {
       width: 64px;
       height: 64px;
-    }
-    .name {
-      font-size: 19px;
     }
   }
 </style>
