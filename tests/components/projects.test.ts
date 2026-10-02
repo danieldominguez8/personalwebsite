@@ -21,6 +21,11 @@ describe("Projects section", () => {
     expect(order).toEqual([...order].sort((a, b) => a - b));
     expect(html.match(/<article\b/g)).toHaveLength(projects.length);
   });
+
+  test("no middle-dot separators anywhere in the section", async () => {
+    const html = await container.renderToString(Projects);
+    expect(html).not.toContain("·");
+  });
 });
 
 describe("ProjectCard", () => {
@@ -28,8 +33,11 @@ describe("ProjectCard", () => {
     const p = byName("Lotería Tradicional");
     const html = await container.renderToString(ProjectCard, { props: { project: p } });
     expect(html).toContain(">30,000+ downloads<");
-    expect(html).toContain("Personal project · 2020 – Present");
-    expect(html).toContain(p.stack.join(" · "));
+    expect(html).toMatch(/class="role"[^>]*>Personal project</);
+    expect(html).toContain("2020 – Present");
+    expect(html).toMatch(/class="year"[^>]*>2020</);
+    expect(html).toContain(p.stack.join(", "));
+    expect(html.match(/class="stack"/g)).toHaveLength(1);
     expect(html).toMatch(/<img[^>]*loading="lazy"/);
     expect(html).toContain(`alt="${p.image!.alt}"`);
     expect(html).toContain(">App Store<");
@@ -41,7 +49,8 @@ describe("ProjectCard", () => {
     });
     expect(html).not.toContain('class="figure"');
     expect(html).toContain('href="https://apps.apple.com/us/app/free-together/id6760777597"');
-    expect(html).toContain("Personal project · 2026");
+    expect(html).toMatch(/class="role"[^>]*>Personal project</);
+    expect(html).toMatch(/class="year"[^>]*>2026</);
   });
 });
 
@@ -50,7 +59,10 @@ describe("ProjectRow", () => {
     const withLink = await container.renderToString(ProjectRow, {
       props: { project: byName("dannydominguez.dev") },
     });
-    expect(withLink).toContain("Personal project · 2022 – Present");
+    expect(withLink).toMatch(/class="role"[^>]*>Personal project</);
+    expect(withLink).toContain("2022 – Present");
+    expect(withLink).toMatch(/class="year"[^>]*>2022</);
+    expect(withLink.match(/class="stack"/g)).toHaveLength(1);
     expect(withLink).toContain('href="https://github.com/danieldominguez8/personalwebsite"');
     expect(withLink).not.toContain("<img");
     expect(withLink).toContain('href="https://www.dannydominguez.dev"');
@@ -58,7 +70,8 @@ describe("ProjectRow", () => {
     const rally = await container.renderToString(ProjectRow, {
       props: { project: byName("Rally Competitions") },
     });
-    expect(rally).toContain("Founder · 2026");
+    expect(rally).toMatch(/class="role"[^>]*>Founder</);
+    expect(rally).toContain("Next.js, Expo / React Native, FastAPI");
     expect(rally).toContain('href="https://www.rallycompetitions.com"');
   });
 

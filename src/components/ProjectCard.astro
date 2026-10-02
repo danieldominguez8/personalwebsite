@@ -7,99 +7,154 @@ interface Props {
 const { project: p } = Astro.props;
 ---
 
-<article class="card">
-  {p.image && (
-    <img
-      src={p.image.src}
-      alt={p.image.alt}
-      width={p.image.width}
-      height={p.image.height}
-      loading="lazy"
-      decoding="async"
-    />
-  )}
-  <div class="body">
-    {p.figure && <p class="figure">{p.figure}</p>}
-    <h3>{p.name}</h3>
-    <p class="muted small">
-      {p.role} · {formatRange(p.start, p.end)}
-    </p>
-    <p class="desc">{p.description}</p>
-    <p class="muted small">{p.stack.join(" · ")}</p>
-    {p.links.length > 0 && (
-      <ul class="links">
-        {p.links.map((l) => (
-          <li>
-            <a href={l.url} rel="noopener">
-              {l.label}
-            </a>
-          </li>
-        ))}
-      </ul>
+<article class="lot">
+  <div class="frame">
+    <p class="year">{p.start.slice(0, 4)}</p>
+    {p.image && (
+      <img
+        src={p.image.src}
+        alt={p.image.alt}
+        width={p.image.width}
+        height={p.image.height}
+        loading="lazy"
+        decoding="async"
+      />
     )}
+    <h3 class="name">{p.name}</h3>
+    <div class="body">
+      {p.figure && <p class="figure">{p.figure}</p>}
+      <p class="meta">
+        <span class="role">{p.role}</span>
+        <span class="range">{formatRange(p.start, p.end)}</span>
+      </p>
+      <p class="desc">{p.description}</p>
+      <p class="stack">{p.stack.join(", ")}</p>
+      {p.links.length > 0 && (
+        <ul class="links">
+          {p.links.map((l) => (
+            <li>
+              <a href={l.url} rel="noopener">
+                {l.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   </div>
 </article>
 
 <style>
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--rule);
-    border-radius: 12px;
-    overflow: hidden;
+  /* Lotería card: heavy black border, paper margin, inner frame, name band. */
+  .lot {
+    background: var(--paper);
+    color: var(--ink);
+    border: 4px solid var(--ink);
+    border-radius: 6px;
+    padding: 10px;
+  }
+  .frame {
+    position: relative;
+    border: 2px solid var(--ink);
+    height: 100%;
     display: flex;
     flex-direction: column;
+  }
+  .year {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background: var(--paper);
+    border-right: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+    padding: 2px 10px;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 26px;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
   }
   img {
     width: 100%;
-    height: 220px;
+    height: 240px;
     object-fit: cover;
     object-position: center 35%;
-    border-bottom: 1px solid var(--rule);
+  }
+  .name {
+    background: var(--marigold);
+    border-block: 2px solid var(--ink);
+    padding: 8px 12px;
+    text-align: center;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 28px;
+    line-height: 1.05;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    /* Long single-word names (DANNYDOMINGUEZ.DEV) must wrap on narrow phones. */
+    overflow-wrap: anywhere;
   }
   .body {
-    padding: 20px 22px 22px;
+    padding: 18px 20px 20px;
     display: flex;
     flex-direction: column;
     gap: 10px;
+    flex: 1;
   }
   .figure {
     font-family: var(--font-display);
-    font-size: 30px;
+    font-weight: 800;
+    font-size: 34px;
     line-height: 1;
-    color: var(--accent);
+    color: var(--rosa);
   }
-  h3 {
-    font-size: 19px;
-    font-weight: 600;
-  }
-  .small {
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 14px;
     font-size: 14px;
+    font-weight: 500;
+    color: var(--graphite);
   }
   .desc {
-    font-size: 15.5px;
+    font-size: 16px;
     line-height: 1.6;
-    color: var(--secondary);
+  }
+  .stack {
+    font-size: 14px;
+    color: var(--graphite);
   }
   .links {
     list-style: none;
     padding: 0;
+    margin-top: auto;
     display: flex;
-    gap: 18px;
+    flex-wrap: wrap;
+    gap: 8px 20px;
     font-size: 15px;
+    font-weight: 600;
   }
   .links a {
-    color: var(--accent);
+    color: var(--cobalt);
+  }
+  .links a:hover {
+    color: var(--ink);
+    text-decoration-thickness: 2px;
   }
   @media (max-width: 767px) {
+    .lot {
+      padding: 8px;
+    }
     img {
-      height: 200px;
+      height: 210px;
+    }
+    .name {
+      font-size: 24px;
     }
     .body {
-      padding: 18px;
+      padding: 16px;
       gap: 8px;
-    }
-    .figure {
-      font-size: 28px;
     }
   }
 </style>

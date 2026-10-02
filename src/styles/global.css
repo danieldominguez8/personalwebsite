@@ -1,24 +1,29 @@
+/*
+ * "Lotería frame" design tokens.
+ * One bold element (the cobalt projects band with Lotería-style cards);
+ * everything else is quiet black on white.
+ */
 :root {
-  --ground: #fafaf7;
-  --surface: #ffffff;
-  --text: #1a1a1a;
-  --body: #3a3a3a;
-  --secondary: #4a4a4a;
-  --muted: #6b6b6b;
-  --rule: #e3e1da;
-  --accent: #1e3a8a;
-  --font-display: "Newsreader Variable", Georgia, serif;
+  --paper: #ffffff;
+  --ink: #000000;
+  --graphite: #4d4d4d;
+  --line: #e2e2e2;
+  --cobalt: #1c3faa;
+  --rosa: #c8005f;
+  --marigold: #f5b700;
+  --footer-text: #bdbdbd;
+  --font-display: "Big Shoulders Display Variable", "Arial Narrow", sans-serif;
   --font-body: "IBM Plex Sans", system-ui, sans-serif;
   /* Fluid column: 86% of the window, never narrower than 760px or wider than 1600px. */
   --col: clamp(760px, 86vw, 1600px);
-  --pad-section: 56px;
-  --gap-section: 32px;
+  --pad-section: 88px;
+  --gap-section: 40px;
 }
 
 @media (max-width: 767px) {
   :root {
-    --pad-section: 36px;
-    --gap-section: 24px;
+    --pad-section: 48px;
+    --gap-section: 28px;
   }
 }
 
@@ -41,10 +46,10 @@ html {
 
 body {
   margin: 0;
-  background: var(--ground);
-  color: var(--text);
+  background: var(--paper);
+  color: var(--ink);
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: 17px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
@@ -68,17 +73,19 @@ img {
 
 a {
   color: inherit;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
 }
 
 a:hover {
-  color: var(--accent);
+  color: var(--cobalt);
 }
 
 a:focus-visible,
 button:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 3px solid var(--rosa);
   outline-offset: 3px;
-  border-radius: 4px;
+  border-radius: 2px;
 }
 
 p,
@@ -101,8 +108,10 @@ main dd {
 }
 
 .section {
-  border-top: 1px solid var(--rule);
   padding-block: var(--pad-section);
+}
+
+.section > .container {
   display: flex;
   flex-direction: column;
   gap: var(--gap-section);
@@ -110,30 +119,32 @@ main dd {
 
 .section-title {
   font-family: var(--font-display);
-  font-weight: 400;
-  font-size: clamp(28px, 4vw, 32px);
-  line-height: 1.15;
+  font-weight: 800;
+  font-size: clamp(40px, 5vw, 64px);
+  line-height: 1;
+  letter-spacing: -0.005em;
+  text-wrap: balance;
 }
 
 .btn {
   display: inline-block;
-  background: var(--text);
-  color: #ffffff;
+  background: var(--ink);
+  color: var(--paper);
   text-decoration: none;
-  border-radius: 999px;
+  border-radius: 4px;
   padding: 12px 22px;
-  font-weight: 500;
+  font-weight: 600;
   white-space: nowrap;
   overflow-wrap: normal;
 }
 
 .btn:hover {
-  color: #ffffff;
-  background: var(--accent);
+  color: var(--paper);
+  background: var(--cobalt);
 }
 
 .muted {
-  color: var(--muted);
+  color: var(--graphite);
 }
 
 .skip-link {
@@ -141,7 +152,7 @@ main dd {
   left: -9999px;
   top: 12px;
   z-index: 10;
-  background: var(--surface);
+  background: var(--paper);
   padding: 8px 12px;
 }
 

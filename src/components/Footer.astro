@@ -24,14 +24,13 @@ const year = new Date().getFullYear();
 
 <style>
   .site-footer {
-    background: var(--surface);
-    border-top: 1px solid var(--rule);
-    color: var(--muted);
+    background: var(--ink);
+    color: var(--footer-text);
     font-size: 14px;
   }
   .bar {
-    min-height: 64px;
-    padding-block: 18px;
+    min-height: 72px;
+    padding-block: 20px;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -45,9 +44,16 @@ const year = new Date().getFullYear();
     gap: 24px;
   }
   a {
-    color: var(--muted);
+    color: var(--paper);
   }
-  /* Phones: links first, copyright after (canvas). */
+  a:hover {
+    color: var(--marigold);
+  }
+  /* Rosa on black is only 3.6:1; marigold reads clearly on the dark footer. */
+  a:focus-visible {
+    outline-color: var(--marigold);
+  }
+  /* Phones: links first, copyright after. */
   @media (max-width: 767px) {
     .bar {
       flex-direction: column;

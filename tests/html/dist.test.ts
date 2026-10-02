@@ -1,5 +1,5 @@
 import { beforeAll, describe, expect, test } from "vitest";
-import { readFileSync, existsSync } from "node:fs";
+import { readFileSync, existsSync, readdirSync } from "node:fs";
 
 let html = "";
 beforeAll(() => {
@@ -100,5 +100,81 @@ describe("links work from every built page", () => {
         expect(homeIds, `${file} /#${anchor}`).toContain(anchor);
       }
     }
+  });
+});
+
+describe("design system in the build", () => {
+  // CSS is inlined into <style> blocks; also read any emitted .css files.
+  const css = () =>
+    [
+      ...readdirSync("dist/_astro")
+        .filter((f) => f.endsWith(".css"))
+        .map((f) => readFileSync(`dist/_astro/${f}`, "utf8")),
+      ...[
+        ...readFileSync("dist/index.html", "utf8").matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g),
+      ].map((m) => m[1]),
+    ].join("\n");
+
+  test("Big Shoulders Display is self-hosted and Newsreader is gone", () => {
+    expect(css()).toMatch(/@font-face\{[^}]*font-family:\s*["']?Big Shoulders Display Variable/);
+    expect(css()).not.toMatch(/Newsreader/i);
+    expect(readdirSync("dist/_astro").some((f) => /newsreader/i.test(f))).toBe(false);
+  });
+
+  test("the preloaded font is the same file @font-face uses (no double download)", () => {
+    const html = readFileSync("dist/index.html", "utf8");
+    const preloaded = html.match(/rel="preload" href="([^"]+\.woff2)"/)?.[1];
+    expect(preloaded).toBeTruthy();
+    expect(css()).toContain(`url(${preloaded})`);
+  });
+
+  test("browser theme color matches the cobalt token", () => {
+    expect(readFileSync("dist/index.html", "utf8")).toContain(
+      '<meta name="theme-color" content="#1c3faa"',
+    );
+  });
+
+  test("no middle-dot separators in visible text", () => {
+    for (const file of ["dist/index.html", "dist/404.html"]) {
+      const text = readFileSync(file, "utf8")
+        .replace(/<(script|style)[^>]*>[\s\S]*?<\/\1>/g, "")
+        .replace(/<[^>]+>/g, " ");
+      expect(text, file).not.toContain("·");
+    }
+  });
+});
+
+describe("first paint is not blocked", () => {
+  test("stylesheets are inlined, not render-blocking requests", () => {
+    const html = readFileSync("dist/index.html", "utf8");
+    expect(html).not.toMatch(/<link[^>]+rel="stylesheet"/);
+    expect(html).toMatch(/<style[^>]*>[\s\S]*--cobalt/);
+  });
+
+  test("every latin web font is preloaded, so no font swap shifts the layout", () => {
+    // CI Lighthouse traced CLS 0.147 to IBM Plex Sans swapping in after first paint.
+    const html = readFileSync("dist/index.html", "utf8");
+    const preloaded = [...html.matchAll(/rel="preload" href="([^"]+\.woff2)"/g)].map((m) => m[1]);
+    for (const name of [
+      "big-shoulders-display-latin-wght-normal",
+      "ibm-plex-sans-latin-400-normal",
+      "ibm-plex-sans-latin-500-normal",
+      "ibm-plex-sans-latin-600-normal",
+    ]) {
+      expect(
+        preloaded.some((u) => u.includes(name)),
+        name,
+      ).toBe(true);
+    }
+  });
+
+  test("the headline font is preloaded", () => {
+    const html = readFileSync("dist/index.html", "utf8");
+    const preload = html.match(/<link[^>]+rel="preload"[^>]*>/g) ?? [];
+    const font = preload.find((l) => /big-shoulders-display-latin-wght-normal[^"]*\.woff2/.test(l));
+    expect(font, "preload link for the Big Shoulders latin woff2").toBeTruthy();
+    expect(font).toMatch(/as="font"/);
+    expect(font).toMatch(/type="font\/woff2"/);
+    expect(font).toMatch(/crossorigin/);
   });
 });

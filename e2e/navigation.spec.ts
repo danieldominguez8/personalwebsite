@@ -64,9 +64,16 @@ test("every link is reachable by keyboard with a visible focus ring", async ({
   expect(seen.size).toBe(total);
 });
 
-test("DD badge uses a font weight that is actually loaded", async ({ page }) => {
-  const weight = await page.locator(".badge").evaluate((el) => getComputedStyle(el).fontWeight);
-  expect(["400", "500", "600"]).toContain(weight);
+test("DD badge is set in the self-hosted display font", async ({ page }) => {
+  const family = await page.locator(".badge").evaluate((el) => getComputedStyle(el).fontFamily);
+  expect(family).toMatch(/^"?Big Shoulders Display Variable/);
+});
+
+test("project links show a distinct hover state", async ({ page }) => {
+  const link = page.locator("#projects a", { hasText: "App Store" }).first();
+  const before = await link.evaluate((el) => getComputedStyle(el).color);
+  await link.hover();
+  await expect.poll(() => link.evaluate((el) => getComputedStyle(el).color)).not.toBe(before);
 });
 
 test("resume downloads as a PDF", async ({ request }) => {
