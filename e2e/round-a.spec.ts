@@ -98,33 +98,3 @@ test.describe("card lift", () => {
     expect(await band.evaluate((el) => getComputedStyle(el).transitionDuration)).toBe("0s");
   });
 });
-
-test.describe("print", () => {
-  test("prints as a clean résumé: no band, no nav, no images, link addresses shown", async ({
-    page,
-  }) => {
-    await page.goto("/");
-    await page.emulateMedia({ media: "print" });
-    expect(
-      await page.locator("#projects").evaluate((el) => getComputedStyle(el).backgroundColor),
-    ).toMatch(/rgba?\(255, 255, 255|rgba\(0, 0, 0, 0\)/);
-    await expect(page.getByRole("navigation", { name: "Sections" })).toBeHidden();
-    await expect(caller(page)).toBeHidden();
-    for (const img of await page.locator("#projects img, #about img").all())
-      await expect(img).toBeHidden();
-    const after = await page
-      .locator("#projects a[href^='https://apps.apple.com']")
-      .first()
-      .evaluate((el) => getComputedStyle(el, "::after").content);
-    expect(after).toContain("apps.apple.com");
-  });
-});
-
-test("the printout fits on three Letter pages", async ({ page, browserName }) => {
-  test.skip(browserName !== "chromium", "page.pdf() is Chromium-only");
-  await page.goto("/");
-  const pdf = (await page.pdf({ format: "Letter" })).toString("latin1");
-  const pages = (pdf.match(/\/Type\s*\/Page(?!s)/g) ?? []).length;
-  expect(pages).toBeGreaterThan(0);
-  expect(pages).toBeLessThanOrEqual(3);
-});

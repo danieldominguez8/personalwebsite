@@ -184,3 +184,11 @@ describe("first paint is not blocked", () => {
     expect(font).toMatch(/crossorigin/);
   });
 });
+
+describe("résumé", () => {
+  test("no custom print layout: the résumé is the owner's PDF", () => {
+    const html = readFileSync("dist/index.html", "utf8");
+    expect(html).not.toMatch(/@media\s+print/);
+    expect(existsSync("dist/resume.pdf")).toBe(true);
+  });
+});
