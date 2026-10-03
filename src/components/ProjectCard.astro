@@ -20,7 +20,9 @@ const { project: p } = Astro.props;
         decoding="async"
       />
     )}
-    <h3 class="name">{p.name}</h3>
+    <h3 class="name" tabindex="-1">
+      {p.name}
+    </h3>
     <div class="body">
       {p.figure && <p class="figure">{p.figure}</p>}
       <p class="meta">
@@ -142,7 +144,41 @@ const { project: p } = Astro.props;
     color: var(--ink);
     text-decoration-thickness: 2px;
   }
-  @media (max-width: 767px) {
+  /* Card lift: the name band rises like a card being picked up. */
+  .lot:hover .name,
+  .lot:focus-within .name {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 0 var(--ink);
+  }
+  /* Motion only when the visitor allows it. */
+  @media (prefers-reduced-motion: no-preference) {
+    .name {
+      transition:
+        transform 160ms ease-out,
+        box-shadow 160ms ease-out;
+    }
+    .lot[data-called] {
+      animation: deal 520ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+  }
+  .lot[data-called] {
+    outline: 4px solid var(--marigold);
+    outline-offset: 4px;
+  }
+  /* The caller focuses the name; keep that focus visible inside the marigold band. */
+  .name:focus {
+    outline: 3px solid var(--ink);
+    outline-offset: -6px;
+  }
+  @keyframes deal {
+    from {
+      transform: perspective(900px) rotateY(-90deg) scale(0.96);
+    }
+    to {
+      transform: none;
+    }
+  }
+  @media screen and (max-width: 767px) {
     .lot {
       padding: 8px;
     }

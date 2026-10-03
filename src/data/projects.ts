@@ -68,6 +68,10 @@ export const projects = projectsSchema.parse([
     links: [
       { label: "Website", url: "https://www.dannydominguez.dev" },
       { label: "GitHub", url: "https://github.com/danieldominguez8/personalwebsite" },
+      {
+        label: "Test runs",
+        url: "https://github.com/danieldominguez8/personalwebsite/actions/workflows/ci.yml",
+      },
     ],
   },
   {

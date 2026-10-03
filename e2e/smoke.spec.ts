@@ -30,15 +30,19 @@ test("sitemap is served as XML, not rewritten to the home page", async ({ reques
 });
 
 test("self-hosted fonts are served as fonts", async ({ request }) => {
+  // CSS is inlined, so read the @font-face URLs straight from the page.
   const html = await (await request.get("/")).text();
-  const cssPath = html.match(/href="(\/_astro\/[^"]+\.css)"/)?.[1];
-  expect(cssPath, "stylesheet link").toBeTruthy();
-  const css = await (await request.get(cssPath!)).text();
-  const fontPath = css.match(/url\((\/_astro\/[^)]+\.woff2)\)/)?.[1];
-  expect(fontPath, "woff2 url in css").toBeTruthy();
-  const font = await request.get(fontPath!);
-  expect(font.status()).toBe(200);
-  expect(font.headers()["content-type"]).toMatch(/font|woff2|octet-stream/);
+  const fontPaths = [
+    ...new Set([...html.matchAll(/url\((\/_astro\/[^)]+\.woff2)\)/g)].map((m) => m[1])),
+  ];
+  expect(fontPaths.length, "woff2 urls in inline css").toBeGreaterThan(0);
+  const preloaded = [...html.matchAll(/rel="preload" href="([^"]+\.woff2)"/g)].map((m) => m[1]);
+  expect(preloaded.length, "preloaded fonts").toBe(4);
+  for (const path of new Set([...preloaded, ...fontPaths])) {
+    const font = await request.get(path);
+    expect(font.status(), path).toBe(200);
+    expect(font.headers()["content-type"], path).toMatch(/font|woff2|octet-stream/);
+  }
 });
 
 test.describe("production-only redirects", () => {
